@@ -1,5 +1,5 @@
-import 'package:campus_connect/services/constant.dart';
-import 'package:google_fonts/google_fonts.dart';
+/*import 'package:campus_connect/services/constant.dart';
+//import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreenPage extends StatefulWidget {
@@ -280,3 +280,4 @@ class PublicationsCard extends StatelessWidget {
     );
   }
 }
+*/

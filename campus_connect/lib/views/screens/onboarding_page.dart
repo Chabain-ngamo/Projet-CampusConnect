@@ -106,9 +106,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 width: 80,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).push(
+                    /*Navigator.of(context).push(
                       MaterialPageRoute(builder: ((context) => HomeScreenPage()))
-                    );
+                    );*/
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: campuscolor,
