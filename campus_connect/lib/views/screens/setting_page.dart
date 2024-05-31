@@ -177,10 +177,12 @@ class _SettingPageState extends State<SettingPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(
-                  Icons.sunny, 
+                Image.asset(
+                  'assets/iconssun.png',
+                  width: 50,
+                  height: 50,
                   color: campuscolor,
-                  size: 50,),
+                ),
                 const Text(
                   "Light mode",
                   style: TextStyle(
@@ -202,11 +204,4 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-
-  Widget _buildGreyText(String text) {
-    return Text(
-      text,
-      style: const TextStyle(color: greyColor, fontFamily: 'Roboto'),
-    );
-  }
 }
