@@ -1,4 +1,5 @@
 import 'package:campus_connect/views/screens/onboarding_page.dart';
+import 'package:campus_connect/views/screens/publication_page.dart';
 import 'package:campus_connect/views/screens/splash_screen_page.dart';
 import 'package:flutter/material.dart';
 

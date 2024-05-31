@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
     return SizedBox(
       width: mediaSize.width,
       child: Image.asset(
-        'logo.png',
+        'assets/logo.png',
         width: 150,
         height: 150,
       ),
@@ -162,9 +162,9 @@ class _LoginPageState extends State<LoginPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Tab(icon: Image.asset("google.png")),
-              Tab(icon: Image.asset("facebook.png")),
-              Tab(icon: Image.asset("twitter.png")),
+              Tab(icon: Image.asset("assets/google.png")),
+              Tab(icon: Image.asset("assets/facebook.png")),
+              Tab(icon: Image.asset("assets/twitter.png")),
             ],
           )
         ],
