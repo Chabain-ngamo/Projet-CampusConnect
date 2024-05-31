@@ -1,3 +1,5 @@
+import 'package:campus_connect/services/constant.dart';
+import 'package:campus_connect/views/screens/reset_password_page.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -8,14 +10,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  late Color myColor;
   late Size mediaSize;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    myColor = Theme.of(context).primaryColor;
     mediaSize = MediaQuery.of(context).size;
     return Container(
       decoration: const BoxDecoration(
@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
     return SizedBox(
       width: mediaSize.width,
       child: const Card(
-        color: Colors.blue,
+        color: campuscolor,
         
       ),
     );
@@ -82,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
         const Text(
           "Welcome back",
           style: TextStyle(
-              color: Colors.black , fontSize: 32, fontWeight: FontWeight.w500),
+              color: darkColor , fontSize: 32, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 20),
         _buildGreyText("Sign in with your account"),
@@ -105,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildGreyText(String text) {
     return Text(
       text,
-      style: const TextStyle(color: Colors.grey),
+      style: const TextStyle(color: greyColor),
     );
   }
 
@@ -128,8 +128,12 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             _buildGreyText("Forgot your password?"),
             TextButton(
-                onPressed: () {}, 
-                child: const Text("Reset here", style: TextStyle(color: Colors.blue))
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: ((context) => const ResetPasswordPage()))
+                    );
+                }, 
+                child: const Text("Reset here", style: TextStyle(color: campuscolor))
             ),
           ],
         )
@@ -144,9 +148,9 @@ class _LoginPageState extends State<LoginPage> {
         debugPrint("Password : ${passwordController.text}");
       },
       style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0),),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0),),
         elevation: 20,
-        shadowColor: myColor,
+        shadowColor: campuscolor,
         minimumSize: const Size.fromHeight(60),
       ),
       child: const Text("LOGIN"),

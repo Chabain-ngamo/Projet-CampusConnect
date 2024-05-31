@@ -1,5 +1,6 @@
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/screens/home_screen_page.dart';
+import 'package:campus_connect/views/screens/login_page.dart';
 import 'package:campus_connect/views/widgets/onboardingW1.dart';
 import 'package:campus_connect/views/widgets/onboardingW2.dart';
 import 'package:flutter/material.dart';
@@ -106,9 +107,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 width: 80,
                 child: ElevatedButton(
                   onPressed: () {
-                    /*Navigator.of(context).push(
-                      MaterialPageRoute(builder: ((context) => HomeScreenPage()))
-                    );*/
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: ((context) => const LoginPage()))
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: campuscolor,

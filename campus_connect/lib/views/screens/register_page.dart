@@ -1,3 +1,4 @@
+import 'package:campus_connect/services/constant.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -8,7 +9,6 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  late Color myColor;
   late Size mediaSize;
   TextEditingController userController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -16,11 +16,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    myColor = Theme.of(context).primaryColor;
     mediaSize = MediaQuery.of(context).size;
     return Container(
       decoration: const BoxDecoration(
-        color: Color.fromARGB(25, 55, 107, 237),
+        color: backColor,
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -50,7 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return SizedBox(
       width: mediaSize.width,
       child: const Card(
-        color: Colors.blue,
+        color: campuscolor,
         
       ),
     );
@@ -83,7 +82,7 @@ class _RegisterPageState extends State<RegisterPage> {
         const Text(
           "Sign Up For Free",
           style: TextStyle(
-              color: Colors.black , fontSize: 32, fontWeight: FontWeight.w500),
+              color: darkColor , fontSize: 32, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 40),
         _buildGreyText("Username"),
@@ -103,7 +102,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _buildGreyText(String text) {
     return Text(
       text,
-      style: const TextStyle(color: Colors.grey),
+      style: const TextStyle(color: greyColor),
     );
   }
 
@@ -126,9 +125,9 @@ class _RegisterPageState extends State<RegisterPage> {
         debugPrint("Password : ${passwordController.text}");
       },
       style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0),),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0),),
         elevation: 20,
-        shadowColor: myColor,
+        shadowColor: campuscolor,
         minimumSize: const Size.fromHeight(60),
       ),
       child: const Text("SIGN UP"),
