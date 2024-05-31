@@ -67,7 +67,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       child: Padding(
         padding: const EdgeInsets.only(left: 16.0),
         child: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.chevron_left),
           onPressed: () {
             Navigator.of(context).pop();
           },
