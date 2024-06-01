@@ -128,7 +128,7 @@ class PublicationsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onDoubleTap: () {
+      onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(builder: ((context) => PublicationPage()))
         );

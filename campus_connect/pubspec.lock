@@ -76,6 +76,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_chat_bubble:
+    dependency: "direct main"
+    description:
+      name: flutter_chat_bubble
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.2"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -95,6 +102,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.3"
+  grouped_list:
+    dependency: "direct main"
+    description:
+      name: grouped_list
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.2.0"
   http:
     dependency: transitive
     description:
@@ -109,6 +123,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.2"
+  intl:
+    dependency: "direct main"
+    description:
+      name: intl
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.17.0"
   introduction_screen:
     dependency: "direct main"
     description:

@@ -1,5 +1,9 @@
+import 'package:campus_connect/views/screens/chat_page.dart';
+import 'package:campus_connect/views/screens/notification_page.dart';
 import 'package:campus_connect/views/screens/onboarding_page.dart';
+import 'package:campus_connect/views/screens/profil_page.dart';
 import 'package:campus_connect/views/screens/publication_page.dart';
+import 'package:campus_connect/views/screens/search_page.dart';
 import 'package:campus_connect/views/screens/splash_screen_page.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +21,7 @@ class MyApp extends StatelessWidget {
       title: 'Campus Connect',
       routes: {
         '/': (context) => const SplashScreen(
-          child: OnboardingPage(),
+          child: ProfilPage(),
         ),
 
       },
