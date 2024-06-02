@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       title: 'Campus Connect',
       routes: {
         '/': (context) => const SplashScreen(
-          child: ProfilPage(),
+          child: OnboardingPage(),
         ),
 
       },

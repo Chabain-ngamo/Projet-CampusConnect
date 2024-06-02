@@ -110,6 +110,7 @@ class _EditProfilPageState extends State<EditProfilPage> {
           debugPrint("promotion : ${promotionController.text}");
         },
         style: ElevatedButton.styleFrom(
+          backgroundColor: campuscolor,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0),),
           elevation: 20,
           shadowColor: campuscolor,

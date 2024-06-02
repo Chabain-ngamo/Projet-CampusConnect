@@ -1,5 +1,6 @@
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/screens/edit_profil_page.dart';
+import 'package:campus_connect/views/screens/meteo_page.dart';
 import 'package:campus_connect/views/screens/notification_page.dart';
 import 'package:campus_connect/views/screens/setting_page.dart';
 import 'package:campus_connect/views/widgets/back_button.dart';
@@ -146,10 +147,12 @@ class _ProfilPageState extends State<ProfilPage> {
                               thickness: 1),
                           InkWell(
                             onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: ((context) => MeteoPage()))
+                              );
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Meteo selected')),
                             );
-                            Navigator.of(context).pop(); // Close the popup
                           },
                             child: Row(
                               children: [
