@@ -1,3 +1,4 @@
+import 'package:campus_connect/main_navigationbar.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/screens/home_screen_page.dart';
 import 'package:campus_connect/views/screens/reset_pass_page.dart';
@@ -218,7 +219,7 @@ class _AuthPageState extends State<AuthPage> {
         debugPrint("Email : ${emailController.text}");
         debugPrint("Password : ${passwordController.text}");
         Navigator.of(context).push(
-            MaterialPageRoute(builder: ((context) => const HomeScreenPage())));
+            MaterialPageRoute(builder: ((context) =>  MainNavigationBar())));
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: campuscolor,

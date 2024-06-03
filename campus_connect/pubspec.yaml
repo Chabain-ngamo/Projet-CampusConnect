@@ -41,6 +41,7 @@ dependencies:
   flutter_chat_bubble: ^2.0.2 
   grouped_list: ^4.2.0
   intl: ^0.17.0
+  file_picker: ^5.2.2
 
 dev_dependencies:
   flutter_test:
