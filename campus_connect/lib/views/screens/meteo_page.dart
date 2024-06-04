@@ -170,7 +170,7 @@ class _MeteoPageState extends State<MeteoPage> {
                   ),
                   const SizedBox(width: 5,),
                   Text(
-                    DateFormat("d.m.y").format(now),
+                    DateFormat("d/M/y").format(now),
                     style: const TextStyle(color: darkColor, fontSize: 20, fontWeight: FontWeight.w400, fontFamily: 'Roboto'),
                   ),
                 ],

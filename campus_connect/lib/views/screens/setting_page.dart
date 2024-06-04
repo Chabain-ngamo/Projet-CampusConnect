@@ -2,6 +2,8 @@ import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/widgets/back_button.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
 
@@ -59,8 +61,8 @@ class _SettingPageState extends State<SettingPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Settings",
+        Text(
+          AppLocalizations.of(context)!.settings,
           style: TextStyle(
               color: darkColor, fontSize: 24, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
         ),
@@ -89,8 +91,8 @@ class _SettingPageState extends State<SettingPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Language",
+              Text(
+                AppLocalizations.of(context)!.language,
                 style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -101,8 +103,8 @@ class _SettingPageState extends State<SettingPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "English",
+                  Text(
+                    AppLocalizations.of(context)!.english,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -113,6 +115,7 @@ class _SettingPageState extends State<SettingPage> {
                     onChanged: (value) {
                       setState(() {
                         isEnglishSelected = value ?? false;
+                        Locale("en");
                       });
                     },
                   ),
@@ -122,8 +125,8 @@ class _SettingPageState extends State<SettingPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "Français",
+                  Text(
+                    AppLocalizations.of(context)!.french,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -134,6 +137,7 @@ class _SettingPageState extends State<SettingPage> {
                     onChanged: (value) {
                       setState(() {
                         isEnglishSelected = !(value ?? false);
+                        Locale("fr");
                       });
                     },
                   ),
@@ -160,9 +164,9 @@ class _SettingPageState extends State<SettingPage> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
+              children: [
                  Text(
-                  "Theme",
+                  AppLocalizations.of(context)!.theme,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -181,8 +185,8 @@ class _SettingPageState extends State<SettingPage> {
                   height: 50,
                   color: campuscolor,
                 ),
-                const Text(
-                  "Light mode",
+                Text(
+                  AppLocalizations.of(context)!.mode,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,

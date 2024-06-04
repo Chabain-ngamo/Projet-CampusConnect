@@ -1,0 +1,26 @@
+{
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings title"
+  },
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme title"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Language title"
+  },
+  "mode": "Light mode",
+  "@mode": {
+    "description": "Light mode title"
+  },
+  "english": "English",
+  "@english": {
+    "description": "English title"
+  },
+  "french": "French",
+  "@french": {
+    "description": "French title"
+  }
+}
