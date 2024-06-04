@@ -1,8 +1,12 @@
 import 'package:campus_connect/main_navigationbar.dart';
 import 'package:campus_connect/services/constant.dart';
-import 'package:campus_connect/views/screens/home_screen_page.dart';
+import 'package:campus_connect/services/global_methods.dart';
+import 'package:campus_connect/services/loading_manager.dart';
 import 'package:campus_connect/views/screens/reset_pass_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:campus_connect/views/screens/success_signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class AuthPage extends StatefulWidget {
@@ -14,10 +18,17 @@ class AuthPage extends StatefulWidget {
 
 class _AuthPageState extends State<AuthPage> {
   late Size mediaSize;
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController userController = TextEditingController();
+  final FirebaseAuth authInstance = FirebaseAuth.instance;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _userController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
   bool isSignUp = false;
+  final _passFocusNode = FocusNode();
+  final _emailFocusNode = FocusNode();
+  final _userFocusNode = FocusNode();
+  bool _isPasswordVisible = false;
 
   void _toggleWidget(bool signUp) {
     setState(() {
@@ -26,20 +37,132 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _userController.dispose();
+    _emailFocusNode.dispose();
+    _passFocusNode.dispose();
+    _userFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _isPasswordVisible = !_isPasswordVisible;
+    });
+  }
+
+  void _submitFormOnRegister() async {
+    final isValid = _formKey.currentState!.validate();
+    FocusScope.of(context).unfocus();
+
+    if (isValid) {
+      _formKey.currentState!.save();
+      setState(() {
+        _isLoading = true;
+      });
+      try {
+        await authInstance.createUserWithEmailAndPassword(
+            email: _emailController.text.toLowerCase().trim(),
+            password: _passwordController.text.trim());
+        final User? user = authInstance.currentUser;
+        final _uid = user!.uid;
+        user.updateDisplayName(_userController.text);
+        user.reload();
+        String assetDefault = 'assets/avatar.png';
+        await FirebaseFirestore.instance.collection('users').doc(_uid).set({
+          'id': _uid,
+          'photo': assetDefault,
+          'name': _userController.text,
+          'email': _emailController.text.toLowerCase(),
+          'password': _passwordController.text,
+          'userLike': [],
+          'createdAt': Timestamp.now(),
+        });
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => SuccessSignUp(),
+        ));
+        print('Succefully registered');
+      } on FirebaseException catch (error) {
+        GlobalMethods.errorDialog(
+            subtitle: '${error.message}', context: context);
+        setState(() {
+          _isLoading = false;
+        });
+      } catch (error) {
+        GlobalMethods.errorDialog(subtitle: '$error', context: context);
+        setState(() {
+          _isLoading = false;
+        });
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  void _submitFormOnLogin() async {
+    final isValid = _formKey.currentState!.validate();
+    FocusScope.of(context).unfocus();
+
+    if (isValid) {
+      _formKey.currentState!.save();
+      setState(() {
+        _isLoading = true;
+      });
+      try {
+        await authInstance.signInWithEmailAndPassword(
+            email: _emailController.text.toLowerCase().trim(),
+            password: _passwordController.text.trim());
+        User? user = authInstance.currentUser;
+        String userId = user!.uid;
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('userId', userId);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => MainNavigationBar(),
+          ),
+        );
+        print('Succefully logged in');
+      } on FirebaseException catch (error) {
+        GlobalMethods.errorDialog(
+            subtitle: '${error.message}', context: context);
+        setState(() {
+          _isLoading = false;
+        });
+      } catch (error) {
+        GlobalMethods.errorDialog(subtitle: '$error', context: context);
+        setState(() {
+          _isLoading = false;
+        });
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     mediaSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(children: [
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildTop(),
-              _buildButton(),
-            ],
+      body: LoadingManager(
+        isLoading: _isLoading,
+        child: Stack(children: <Widget>[
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildTop(),
+                _buildButton(),
+              ],
+            ),
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 
@@ -86,7 +209,9 @@ class _AuthPageState extends State<AuthPage> {
                     },
                     child: Text("LOGIN",
                         style: TextStyle(
-                            color: isSignUp ? Color.fromARGB(124, 255, 255, 255) : Colors.white,
+                            color: isSignUp
+                                ? Color.fromARGB(124, 255, 255, 255)
+                                : Colors.white,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Roboto'))),
@@ -98,7 +223,9 @@ class _AuthPageState extends State<AuthPage> {
                     },
                     child: Text("SIGN UP",
                         style: TextStyle(
-                            color: isSignUp ? Colors.white : Color.fromARGB(124, 255, 255, 255),
+                            color: isSignUp
+                                ? Colors.white
+                                : Color.fromARGB(124, 255, 255, 255),
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Roboto'))),
@@ -150,19 +277,27 @@ class _AuthPageState extends State<AuthPage> {
               fontWeight: FontWeight.w600,
               fontFamily: 'Roboto'),
         ),
-        const SizedBox(height: 10),
-        _buildGreyText1("Sign in with your account"),
-        const SizedBox(height: 30),
-        _buildGreyText1("Username"),
-        _buildInputField1(emailController),
-        const SizedBox(height: 30),
-        _buildGreyText1("Password"),
-        _buildInputField1(passwordController, isPassword: true),
-        const SizedBox(height: 40),
-        _buildLoginButton1(),
-        const SizedBox(height: 10),
-        _buildRememberForgot1(),
-        const SizedBox(height: 20),
+        Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 10),
+                _buildGreyText1("Sign in with your account"),
+                const SizedBox(height: 30),
+                _buildGreyText1("Email"),
+                _buildInputField1(_emailController,_emailFocusNode,onEditingComplete: () =>
+                      FocusScope.of(context).requestFocus(_passFocusNode),),
+                const SizedBox(height: 30),
+                _buildGreyText1("Password"),
+                _buildInputField1(_passwordController, isPassword: true,_passFocusNode),
+                const SizedBox(height: 40),
+                _buildLoginButton1(),
+                const SizedBox(height: 10),
+                _buildRememberForgot1(),
+                const SizedBox(height: 20),
+              ],
+            )),
         _buildOtherLogin1(),
       ],
     );
@@ -179,16 +314,23 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  Widget _buildInputField1(TextEditingController controller,
-      {isPassword = false}) {
+  Widget _buildInputField1(TextEditingController controller, FocusNode focusNode,
+      {bool isPassword = false, VoidCallback? onEditingComplete}) {
     return TextField(
       controller: controller,
+      focusNode: focusNode,
       decoration: InputDecoration(
         suffixIcon: isPassword
-            ? const Icon(Icons.remove_red_eye)
+            ? IconButton(
+                icon: Icon(
+                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                ),
+                onPressed: _togglePasswordVisibility,
+              )
             : const Icon(Icons.done),
       ),
-      obscureText: isPassword,
+      obscureText: isPassword && !_isPasswordVisible,
+      onEditingComplete: onEditingComplete,
     );
   }
 
@@ -216,10 +358,9 @@ class _AuthPageState extends State<AuthPage> {
   Widget _buildLoginButton1() {
     return ElevatedButton(
       onPressed: () {
-        debugPrint("Email : ${emailController.text}");
-        debugPrint("Password : ${passwordController.text}");
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: ((context) =>  MainNavigationBar())));
+        debugPrint("Email : ${_emailController.text}");
+        debugPrint("Password : ${_passwordController.text}");
+        _submitFormOnLogin();
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: campuscolor,
@@ -296,16 +437,31 @@ class _AuthPageState extends State<AuthPage> {
             fontFamily: 'Roboto',
           ),
         ),
-        const SizedBox(height: 40),
-        _buildGreyText("Username"),
-        _buildInputField(userController),
-        const SizedBox(height: 20),
-        _buildGreyText("Email"),
-        _buildInputField(emailController),
-        const SizedBox(height: 20),
-        _buildGreyText("Password"),
-        _buildInputField(passwordController, isPassword: true),
-        const SizedBox(height: 100),
+        Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 40),
+                _buildGreyText("Username"),
+                _buildInputField(
+                  _userController,
+                  _userFocusNode,
+                  onEditingComplete: () =>
+                      FocusScope.of(context).requestFocus(_emailFocusNode),
+                ),
+                const SizedBox(height: 20),
+                _buildGreyText("Email"),
+                _buildInputField(_emailController, _emailFocusNode,
+                    onEditingComplete: () =>
+                        FocusScope.of(context).requestFocus(_passFocusNode)),
+                const SizedBox(height: 20),
+                _buildGreyText("Password"),
+                _buildInputField(
+                    _passwordController, isPassword: true, _passFocusNode),
+                const SizedBox(height: 100),
+              ],
+            )),
         _buildLoginButton(),
       ],
     );
@@ -322,28 +478,33 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  Widget _buildInputField(TextEditingController controller,
-      {isPassword = false}) {
+  Widget _buildInputField(TextEditingController controller, FocusNode focusNode,
+      {bool isPassword = false, VoidCallback? onEditingComplete}) {
     return TextField(
       controller: controller,
+      focusNode: focusNode,
       decoration: InputDecoration(
         suffixIcon: isPassword
-            ? const Icon(Icons.remove_red_eye)
+            ? IconButton(
+                icon: Icon(
+                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                ),
+                onPressed: _togglePasswordVisibility,
+              )
             : const Icon(Icons.done),
       ),
-      obscureText: isPassword,
+      obscureText: isPassword && !_isPasswordVisible,
+      onEditingComplete: onEditingComplete,
     );
   }
 
   Widget _buildLoginButton() {
     return ElevatedButton(
       onPressed: () {
-        debugPrint("User : ${userController.text}");
-        debugPrint("Email : ${emailController.text}");
-        debugPrint("Password : ${passwordController.text}");
-        Navigator.of(context).push(
-                      MaterialPageRoute(builder: ((context) => SuccessSignUp()))
-                    );
+        debugPrint("User : ${_userController.text}");
+        debugPrint("Email : ${_emailController.text}");
+        debugPrint("Password : ${_passwordController.text}");
+        _submitFormOnRegister();
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: campuscolor,

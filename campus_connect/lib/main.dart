@@ -1,10 +1,7 @@
-import 'package:campus_connect/views/screens/chat_page.dart';
-import 'package:campus_connect/views/screens/notification_page.dart';
+import 'package:campus_connect/main_navigationbar.dart';
 import 'package:campus_connect/views/screens/onboarding_page.dart';
-import 'package:campus_connect/views/screens/profil_page.dart';
-import 'package:campus_connect/views/screens/publication_page.dart';
-import 'package:campus_connect/views/screens/search_page.dart';
 import 'package:campus_connect/views/screens/splash_screen_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -20,9 +17,23 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Campus Connect',
       routes: {
-        '/': (context) => const SplashScreen(
-          child: OnboardingPage(),
-        ),
+        '/': (context) => SplashScreen(
+                child: FutureBuilder<SharedPreferences>(
+                  future: SharedPreferences.getInstance(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      String? userId = snapshot.data!.getString('userId');
+                      if (userId != null && userId.isNotEmpty) {
+                        return MainNavigationBar();
+                      } else {
+                        return OnboardingPage();
+                      }
+                    } else {
+                      return CircularProgressIndicator();
+                    }
+                  },
+                ),
+              ),
 
       },
     );

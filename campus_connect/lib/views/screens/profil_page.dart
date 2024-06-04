@@ -1,10 +1,11 @@
 import 'package:campus_connect/services/constant.dart';
+import 'package:campus_connect/views/screens/auth_page.dart';
 import 'package:campus_connect/views/screens/edit_profil_page.dart';
 import 'package:campus_connect/views/screens/meteo_page.dart';
 import 'package:campus_connect/views/screens/notification_page.dart';
 import 'package:campus_connect/views/screens/setting_page.dart';
-import 'package:campus_connect/views/widgets/back_button.dart';
-import 'package:campus_connect/views/widgets/likesW.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 class ProfilPage extends StatefulWidget {
@@ -15,6 +16,8 @@ class ProfilPage extends StatefulWidget {
 }
 
 class _ProfilPageState extends State<ProfilPage> {
+  final FirebaseAuth authInstance = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     final List<Map<String, String>> commentsList = [
@@ -79,136 +82,144 @@ class _ProfilPageState extends State<ProfilPage> {
                           value: 0,
                           child: Column(
                             children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: ((context) => SettingPage()))
-                              );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Settings selected')),
-                            );
-                          },
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  'assets/icons8_setting.png',
-                                  fit: BoxFit.cover,
-                                  width: 28,
-                                  height: 28,
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: ((context) => SettingPage())));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text('Settings selected')),
+                                  );
+                                },
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/icons8_setting.png',
+                                      fit: BoxFit.cover,
+                                      width: 28,
+                                      height: 28,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'Settings',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontFamily: 'Roboto',
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(width: 10,),
-                                Text(
-                                  'Settings',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontFamily: 'Roboto',
-                                    fontWeight: FontWeight.w800,
-                                  ),
+                              ),
+                              Divider(
+                                  color: Color.fromARGB(116, 158, 158, 158),
+                                  thickness: 1),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: ((context) =>
+                                          NotificationPage())));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content:
+                                            Text('Notifications selected')),
+                                  );
+                                },
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/icons8_notification.png',
+                                      fit: BoxFit.cover,
+                                      width: 28,
+                                      height: 28,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'Notifications',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontFamily: 'Roboto',
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
-                            Divider(
-                              color: Color.fromARGB(116, 158, 158, 158),
-                              thickness: 1),
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: ((context) => NotificationPage()))
-                              );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Notifications selected')),
-                            );
-                          },
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  'assets/icons8_notification.png',
-                                  fit: BoxFit.cover,
-                                  width: 28,
-                                  height: 28,
+                              ),
+                              Divider(
+                                  color: Color.fromARGB(116, 158, 158, 158),
+                                  thickness: 1),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: ((context) => MeteoPage())));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Meteo selected')),
+                                  );
+                                },
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/icons_meteo.png',
+                                      fit: BoxFit.cover,
+                                      width: 28,
+                                      height: 28,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'Meteo',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontFamily: 'Roboto',
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(width: 10,),
-                                Text(
-                                  'Notifications',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontFamily: 'Roboto',
-                                    fontWeight: FontWeight.w800,
-                                  ),
+                              ),
+                              Divider(
+                                  color: Color.fromARGB(116, 158, 158, 158),
+                                  thickness: 1),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: ((context) =>
+                                          EditProfilPage())));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Edit selected')),
+                                  );
+                                },
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/icons_edit.png',
+                                      fit: BoxFit.cover,
+                                      width: 28,
+                                      height: 28,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      'Edit',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontFamily: 'Roboto',
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
-                           Divider(
-                              color: Color.fromARGB(116, 158, 158, 158),
-                              thickness: 1),
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: ((context) => MeteoPage()))
-                              );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Meteo selected')),
-                            );
-                          },
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  'assets/icons_meteo.png',
-                                  fit: BoxFit.cover,
-                                  width: 28,
-                                  height: 28,
-                                ),
-                                SizedBox(width: 10,),
-                                Text(
-                                  'Meteo',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontFamily: 'Roboto',
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Divider(
-                              color: Color.fromARGB(116, 158, 158, 158),
-                              thickness: 1),
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: ((context) => EditProfilPage()))
-                              );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Edit selected')),
-                            );
-                          },
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  'assets/icons_edit.png',
-                                  fit: BoxFit.cover,
-                                  width: 28,
-                                  height: 28,
-                                ),
-                                SizedBox(width: 10,),
-                                Text(
-                                  'Edit',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontFamily: 'Roboto',
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                           
+                              ),
                             ],
                           ),
                         ),
@@ -223,14 +234,14 @@ class _ProfilPageState extends State<ProfilPage> {
               height: 20,
             ),
             Container(
-              height: 380,
+              height: 400,
               child: Stack(
                 children: [
                   Column(
                     children: [
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 25),
-                        height: 350,
+                        height: 370,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -383,6 +394,82 @@ class _ProfilPageState extends State<ProfilPage> {
                                 ],
                               ),
                             ),
+                            Container(
+                              width: 160,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(18),
+                                color: Color.fromARGB(255, 229, 228, 228),
+                              ),
+                              child: ElevatedButton.icon(
+                                onPressed: () async {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      actionsAlignment:
+                                          MainAxisAlignment.center,
+                                      title: Text(
+                                        'Sign out ?',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: campuscolor,
+                                            fontSize: 20),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      actions: [
+                                        ElevatedButton(
+                                            style: TextButton.styleFrom(
+                                              backgroundColor: campuscolor,
+                                            ),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text('Non')),
+                                        ElevatedButton(
+                                          style: TextButton.styleFrom(
+                                            backgroundColor: campuscolor,
+                                          ),
+                                          onPressed: () async {
+                                            await authInstance.signOut();
+                                            SharedPreferences prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            await prefs.remove('userId');
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AuthPage(),
+                                              ),
+                                            );
+                                          },
+                                          child: Text('Oui'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                icon: Icon(Icons.logout,
+                                    size: 20, color: Colors.white),
+                                label: Row(
+                                  children: [
+                                    SizedBox(width: 10),
+                                    Text(
+                                      'Log Out',
+                                      style: TextStyle(
+                                          fontSize: 15, color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  primary: campuscolor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 15, horizontal: 20),
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
