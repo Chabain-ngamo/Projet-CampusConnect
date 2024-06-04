@@ -144,7 +144,18 @@ class _MeteoPageState extends State<MeteoPage> {
 
   Widget _buildSingleData() {
     String location = _weather?.areaName ?? "";
-    DateTime now = _weather!.date!;
+    DateTime? now = _weather?.date;
+
+    if (_weather == null || now == null) {
+        // Afficher un message ou un indicateur de chargement
+        return Center(
+            child: Text(
+                'Données météo indisponibles.',
+                style: TextStyle(color: darkColor, fontSize: 24),
+            ),
+        );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -158,7 +169,7 @@ class _MeteoPageState extends State<MeteoPage> {
               ),
             ),
             const SizedBox(height: 20),
-             Center(
+            Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
@@ -170,7 +181,7 @@ class _MeteoPageState extends State<MeteoPage> {
                   ),
                   const SizedBox(width: 5,),
                   Text(
-                    DateFormat("d/M/y").format(now),
+                    DateFormat("d.m.y").format(now),
                     style: const TextStyle(color: darkColor, fontSize: 20, fontWeight: FontWeight.w400, fontFamily: 'Roboto'),
                   ),
                 ],
@@ -188,10 +199,20 @@ class _MeteoPageState extends State<MeteoPage> {
         ),
       ],
     );
-  }
+}
+
 
 
   Widget _buildWeatherForecast() {
+    if (_weathers == null) {
+        return Center(
+            child: Text(
+                'Prévisions météorologiques indisponibles.',
+                style: TextStyle(color: darkColor, fontSize: 24),
+            ),
+        );
+    }
+
     return Column(
       children: [
         const Align(
@@ -213,7 +234,12 @@ class _MeteoPageState extends State<MeteoPage> {
             child: Column(
               children: List.generate(7, (index) {
                 final weather = _weathers![index];
-                final dateTime = weather.date!;
+                final dateTime = weather.date;
+
+                if (dateTime == null) {
+                    return const SizedBox.shrink();  // Ignore les entrées avec des dates nulles
+                }
+
                 final dayOfWeek = DateFormat('EEE').format(dateTime);
                 final temperature = weather.temperature?.celsius?.toStringAsFixed(0);
                 final iconUrl = "http://openweathermap.org/img/w/${weather.weatherIcon}.png";
@@ -253,5 +279,6 @@ class _MeteoPageState extends State<MeteoPage> {
         ),
       ],
     );
-  }
+}
+
 }
