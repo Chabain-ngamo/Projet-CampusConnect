@@ -22,12 +22,14 @@ class _AuthPageState extends State<AuthPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _userController = TextEditingController();
+  final _promoController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   bool isSignUp = false;
   final _passFocusNode = FocusNode();
   final _emailFocusNode = FocusNode();
   final _userFocusNode = FocusNode();
+  final _promoFocusNode = FocusNode();
   bool _isPasswordVisible = false;
 
   void _toggleWidget(bool signUp) {
@@ -44,6 +46,7 @@ class _AuthPageState extends State<AuthPage> {
     _emailFocusNode.dispose();
     _passFocusNode.dispose();
     _userFocusNode.dispose();
+    _promoFocusNode.dispose();
     super.dispose();
   }
 
@@ -70,14 +73,15 @@ class _AuthPageState extends State<AuthPage> {
         final _uid = user!.uid;
         user.updateDisplayName(_userController.text);
         user.reload();
-        String assetDefault = 'assets/avatar.png';
+        const String defaultPhotoURL = 'assets/avatar.png';
         await FirebaseFirestore.instance.collection('users').doc(_uid).set({
           'id': _uid,
-          'photo': assetDefault,
           'name': _userController.text,
+          'promo': _promoController.text,
           'email': _emailController.text.toLowerCase(),
           'password': _passwordController.text,
           'userLike': [],
+          'photo': defaultPhotoURL,
           'createdAt': Timestamp.now(),
         });
         Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -448,6 +452,14 @@ class _AuthPageState extends State<AuthPage> {
                   _userController,
                   _userFocusNode,
                   onEditingComplete: () =>
+                      FocusScope.of(context).requestFocus(_promoFocusNode),
+                ),
+                const SizedBox(height: 20),
+                _buildGreyText("Promotion"),
+                _buildInputField(
+                  _promoController,
+                  _promoFocusNode,
+                  onEditingComplete: () =>
                       FocusScope.of(context).requestFocus(_emailFocusNode),
                 ),
                 const SizedBox(height: 20),
@@ -459,7 +471,7 @@ class _AuthPageState extends State<AuthPage> {
                 _buildGreyText("Password"),
                 _buildInputField(
                     _passwordController, isPassword: true, _passFocusNode),
-                const SizedBox(height: 100),
+                const SizedBox(height: 50),
               ],
             )),
         _buildLoginButton(),
@@ -502,6 +514,7 @@ class _AuthPageState extends State<AuthPage> {
     return ElevatedButton(
       onPressed: () {
         debugPrint("User : ${_userController.text}");
+        debugPrint("Promo : ${_promoController.text}");
         debugPrint("Email : ${_emailController.text}");
         debugPrint("Password : ${_passwordController.text}");
         _submitFormOnRegister();

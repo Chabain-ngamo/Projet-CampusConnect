@@ -1,6 +1,11 @@
 import 'package:campus_connect/services/constant.dart';
+import 'package:campus_connect/services/global_methods.dart';
+import 'package:campus_connect/services/loading_manager.dart';
+import 'package:campus_connect/views/screens/auth_page.dart';
 import 'package:campus_connect/views/screens/success_reset_page.dart';
 import 'package:campus_connect/views/widgets/back_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 
 class ResetPasswordPage extends StatefulWidget {
@@ -11,19 +16,65 @@ class ResetPasswordPage extends StatefulWidget {
 }
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
-  late Size mediaSize;
-  TextEditingController emailController = TextEditingController();
+  final _emailController = TextEditingController();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  void _forgetPass() async {
+    if (_emailController.text.isEmpty ||
+        !_emailController.text.contains("@")) {
+      GlobalMethods.errorDialog(
+          subtitle: 'Please enter a correct email address', context: context);
+    } else {
+      setState(() {
+        _isLoading = true;
+      });
+      try {
+        await authInstance.sendPasswordResetEmail(
+            email: _emailController.text.toLowerCase());
+        Fluttertoast.showToast(
+          msg: "An email has been sent to your email address",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.grey.shade600,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => SuccessReset(),
+        ));
+      } on FirebaseException catch (error) {
+        GlobalMethods.errorDialog(
+            subtitle: '${error.message}', context: context);
+        setState(() {
+          _isLoading = false;
+        });
+      } catch (error) {
+        GlobalMethods.errorDialog(subtitle: '$error', context: context);
+        setState(() {
+          _isLoading = false;
+        });
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    mediaSize = MediaQuery.of(context).size;
-    return Container(
-      decoration: const BoxDecoration(
-        color: backColor
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Stack(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: LoadingManager(
+        isLoading: _isLoading,
+        child: Stack(
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -47,7 +98,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   Widget _buildTop() {
     return SizedBox(
-      width: mediaSize.width,
       child: Image.asset(
         'assets/logo.png',
       ),
@@ -56,7 +106,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   Widget _buildBottom() {
     return SizedBox(
-      width: mediaSize.width,
       child: Column(
         children: [
           Padding(
@@ -87,7 +136,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         ),
         const SizedBox(height: 20),
         _buildGreyText("Email"),
-        _buildInputField(emailController),
+        _buildInputField(_emailController),
       ],
     );
   }
@@ -115,9 +164,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       padding: const EdgeInsets.all(32.0),
       child: ElevatedButton(
         onPressed: () {
-          debugPrint("Email : ${emailController.text}");
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: ((context) => SuccessReset ())));
+          debugPrint("Email : ${_emailController.text}");
+          _forgetPass();
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: campuscolor,
