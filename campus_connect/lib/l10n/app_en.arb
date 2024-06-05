@@ -22,5 +22,157 @@
   "french": "French",
   "@french": {
     "description": "French title"
+  },
+  "mode2": "Dark mode",
+  "@mode2": {
+    "description": "Dark mode title"
+  },
+  "exchange": "Exchange",
+  "@exchange": {
+    "description": "exchange title"
+  },
+  "exchangeDetail": "Easily exchange messages with your classmates to help each other while you learn.",
+  "@exchangeDetail": {
+    "description": "exchangeDetail title"
+  },
+  "collaborate": "Collaborate",
+  "@collaborate": {
+    "description": "collaborate title"
+  },
+  "collaborateDetail": "Collaborate with your friends and classmates by sending messages, files and comments within the app.",
+  "@collaborateDetail": {
+    "description": "collaborateDetail title"
+  },
+  "read": "Read the publication you want instantly",
+  "@read": {
+    "description": "read title"
+  },
+  "readDetail": "you can create and share publications on campus connect, comment on them and communicate easily between students",
+  "@readDetail": {
+    "description": "readDetail title"
+  },
+  "login": "LOGIN",
+  "@login": {
+    "description": "login title"
+  },
+  "signup": "SIGNUP",
+  "@signup": {
+    "description": "signup title"
+  },
+  "welcome": "Welcome back",
+  "@welcome": {
+    "description": "welcome title"
+  },
+  "welcomeDetail": "Sign in with your account",
+  "@welcomeDetail": {
+    "description": "welcomeDetail title"
+  },
+  "username": "Username",
+  "@username": {
+    "description": "username title"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "email title"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "password title"
+  }, 
+  "forgotPass": "Forgot your password?",
+  "@forgotPass": {
+    "description": "forgotPass title"
+  },
+  "resetPass": "Reset here",
+  "@resetPass": {
+    "description": "resetPass title"
+  },
+  "signOpt": "OR SIGN IN WITH",
+  "@signOpt": {
+    "description": "signOpt title"
+  },
+  "forgotPassTitle": "Forgot Password",
+  "@forgotPassTitle": {
+    "description": "forgotPassTitle title"
+  },
+  "forgotPassDetail": "Please, enter your email address, you will receive a link to create a new password via email",
+  "@forgotPassDetail": {
+    "description": "forgotPassDetail title"
+  },
+  "congrat": "Congrats!",
+  "@congrat": {
+    "description": "congrat title"
+  },
+  "congratPassword": "Password Reset Successful",
+  "@congratPassword": {
+    "description": "congratPassword title"
+  },
+  "congratSign": "Your Profile Is Ready To Use",
+  "@congratSign": {
+    "description": "congratSign title"
+  },
+  "homeTitle": "Explore today’s",
+  "@homeTitle": {
+    "description": "home title"
+  },
+  "comment": "Comments",
+  "@comment": {
+    "description": "comment title"
+  },
+  "post": "Post",
+  "@post": {
+    "description": "post title"
+  },
+  "postText": "Write a message",
+  "@postText": {
+    "description": "postText title"
+  },
+  "chat": "Chat",
+  "@chat": {
+    "description": "chat title"
+  },
+  "profile": "Profile",
+  "@profile": {
+    "description": "profile title"
+  },
+  "about_me": "About me",
+  "@about_me": {
+    "description": "about_me title"
+  },
+  "myPub": "My Publications",
+  "@myPub": {
+    "description": "myPub title"
+  },
+  "notification": "Notifications",
+  "@notification": {
+    "description": "notification title"
+  },
+  "edit": "Edit",
+  "@edit": {
+    "description": "edit title"
+  },
+  "meteo": "Meteo",
+  "@meteo": {
+    "description": "meteo title"
+  },
+  "meteoDetail": "Prévisions sur une semaine",
+  "@meteoDetail": {
+    "description": "meteoDetail title"
+  },
+  "updatePro": "Update Profile",
+  "@updatePro": {
+    "description": "updatePro title"
+  },
+  "promotion": "Promotion",
+  "@promotion": {
+    "description": "promotion title"
+  },
+  "name": "Name",
+  "@name": {
+    "description": "name title"
+  },
+  "updateBut": "UPDATE",
+  "@updateBut": {
+    "description": "updateBut title"
   }
 }

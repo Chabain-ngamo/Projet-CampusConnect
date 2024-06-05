@@ -1,8 +1,11 @@
+import 'package:campus_connect/provider/provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/widgets/back_button.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -18,38 +21,45 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     mediaSize = MediaQuery.of(context).size;
-    return Container(
-      decoration: const BoxDecoration(
-        color: backColor
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Stack(
-          children: [
-            ButtonBackWidget(),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(height: 50,),
-                _buildBottom(),
-              ],
+    return ChangeNotifierProvider(
+      create: (BuildContext context)=>UiProvider()..init(),
+      child: Consumer<UiProvider>(
+        builder: (context, UiProvider notifier, child) {
+          return Container(
+            decoration: BoxDecoration(
+              color: notifier.isDark ? campuscolor : backColor,
             ),
-          ],
-        ),
+            child: Scaffold(
+              backgroundColor: notifier.isDark ? darkColor : Colors.white,
+              body: Stack(
+                children: [
+                  ButtonBackWidget(),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 50),
+                      _buildBottom(context, notifier),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 
   
 
-  Widget _buildBottom() {
+  Widget _buildBottom(BuildContext context, UiProvider notifier) {
     return SizedBox(
       width: mediaSize.width,
       child: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(32.0),
-            child: _buildForm(),
+            child: _buildForm(context, notifier),
           ),
         ],
       ),
@@ -57,17 +67,17 @@ class _SettingPageState extends State<SettingPage> {
   }
 
 
-  Widget _buildForm() {
+  Widget _buildForm(BuildContext context, UiProvider notifier) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           AppLocalizations.of(context)!.settings,
           style: TextStyle(
-              color: darkColor, fontSize: 24, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
+              color: notifier.isDark ? greyColor :darkColor, fontSize: 24, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
         ),
         const SizedBox(height: 20),
-        _buildDarkModeCard(),
+        _buildDarkModeCard(context, notifier),
         const SizedBox(height: 20),
         _buildLanguageCard(),
       ],
@@ -151,7 +161,8 @@ class _SettingPageState extends State<SettingPage> {
   }
 
 
-  Widget _buildDarkModeCard() {
+  Widget _buildDarkModeCard(BuildContext context, UiProvider notifier) {
+    
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
@@ -167,7 +178,7 @@ class _SettingPageState extends State<SettingPage> {
               children: [
                  Text(
                   AppLocalizations.of(context)!.theme,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Roboto'
@@ -180,22 +191,21 @@ class _SettingPageState extends State<SettingPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Image.asset(
-                  'assets/iconssun.png',
+                  notifier.isDark ? 'assets/dark.png' : 'assets/iconssun.png',
                   width: 50,
                   height: 50,
-                  color: campuscolor,
+                  color: notifier.isDark ? greyColor : campuscolor,
                 ),
                 Text(
-                  AppLocalizations.of(context)!.mode,
-                  style: TextStyle(
+                  notifier.isDark ? AppLocalizations.of(context)!.mode : AppLocalizations.of(context)!.mode,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Switch(
-                  value: true,
-                  onChanged: (value) {
-                  },
+                  value: notifier.isDark,
+                  onChanged: (value)=>notifier.changeTheme()
                 ),
               ],
             ),

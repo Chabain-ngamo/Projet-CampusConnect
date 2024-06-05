@@ -1,3 +1,4 @@
+import 'package:campus_connect/provider/provider.dart';
 import 'package:campus_connect/views/screens/chat_page.dart';
 import 'package:campus_connect/views/screens/notification_page.dart';
 import 'package:campus_connect/views/screens/onboarding_page.dart';
@@ -9,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 
@@ -25,18 +27,30 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Campus Connect',
-      routes: {
-        '/': (context) => const SplashScreen(
-          child: OnboardingPage(),
-        ),
+    return ChangeNotifierProvider(
+      create: (BuildContext context)=>UiProvider()..init(),
+      child: Consumer<UiProvider>(
+        builder: (context, UiProvider notifier, child) {
+          return MaterialApp(
+            title: 'Campus Connect',
+            routes: {
+              '/': (context) => const SplashScreen(
+                child: OnboardingPage(),
+              ),
 
-      },
-      locale: const Locale("en"),
-      
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+            },
+            locale: const Locale("fr"),
+            
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+
+            themeMode: notifier.isDark? ThemeMode.dark : ThemeMode.light,
+
+            //Our custom theme applied
+            darkTheme: notifier.isDark? notifier.darkTheme : notifier.lightTheme,
+          );
+        }
+      ),
     );
   }
 }
