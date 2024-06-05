@@ -73,7 +73,7 @@ class _AuthPageState extends State<AuthPage> {
         final _uid = user!.uid;
         user.updateDisplayName(_userController.text);
         user.reload();
-        const String defaultPhotoURL = 'assets/avatar.png';
+        const String defaultPhotoURL = 'https://firebasestorage.googleapis.com/v0/b/campus-connect-ea94f.appspot.com/o/images%2F2024-06-05%2009%3A01%3A14.463241?alt=media&token=7ecbcc54-7244-450d-89a6-98fcfd5cb07d';
         await FirebaseFirestore.instance.collection('users').doc(_uid).set({
           'id': _uid,
           'name': _userController.text,

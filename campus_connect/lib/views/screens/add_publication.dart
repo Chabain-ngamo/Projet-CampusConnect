@@ -196,58 +196,58 @@ class _AddPublicationState extends State<AddPublication> {
           child: ElevatedButton(
   onPressed: () async {
     User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
-      DocumentSnapshot userSnapshot =
-          await firestore.collection('users').doc(user.uid).get();
+  if (user != null) {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    DocumentSnapshot userSnapshot =
+        await firestore.collection('users').doc(user.uid).get();
 
-      final userPhoto = userSnapshot['photo'];
-      double nbLike = 0;
-      double nbComment = 0;
+    final userPhoto = userSnapshot['photo'];
+    double nbLike = 0;
+    double nbComment = 0;
 
-      final publicationId = const Uuid().v4();
+    final publicationId = const Uuid().v4();
 
-      try {
-        if (selectedImage != null) {
-          String imageUrl = await uploadImage(selectedImage!);
+    try {
+      if (_messageController.text.isNotEmpty && selectedImage != null) {
+        String imageUrl = await uploadImage(selectedImage!);
 
-          await FirebaseFirestore.instance
-              .collection('publications')
-              .doc(publicationId)
-              .set({
-            'publicationId': publicationId,
-            'userId': user.uid,
-            'userPhoto': userPhoto,
-            'publiPhoto': imageUrl,
-            'nbLike': nbLike,
-            'nbComment': nbComment,
-            'userName': user.displayName,
-            'message': _messageController.text,
-            'publicationDate': Timestamp.now(),
-          });
+        await FirebaseFirestore.instance
+            .collection('publications')
+            .doc(publicationId)
+            .set({
+          'publicationId': publicationId,
+          'userId': user.uid,
+          'userPhoto': userPhoto,
+          'publiPhoto': imageUrl,
+          'nbLike': nbLike,
+          'nbComment': nbComment,
+          'userName': user.displayName,
+          'message': _messageController.text,
+          'publicationDate': Timestamp.now(),
+        });
 
-          publicationProvider.fetchPublication();
-          await Fluttertoast.showToast(
-            msg: "Your publication has been added",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-          );
-        } else {
-          // Afficher un message d'erreur si l'utilisateur n'a pas sélectionné d'image
-          GlobalMethods.errorDialog(
-            subtitle: "Please select an image to publish",
-            context: context,
-          );
-        }
-      } catch (error) {
+        publicationProvider.fetchPublication();
+        await Fluttertoast.showToast(
+          msg: "Your publication has been added",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+        );
+      } else {
+        // Afficher un message d'erreur si l'utilisateur n'a pas entré de message ou sélectionné d'image
         GlobalMethods.errorDialog(
-          subtitle: error.toString(),
+          subtitle: "Please enter a message and select an image to publish",
           context: context,
         );
-      } finally {
-        Navigator.pop(context);
       }
+    } catch (error) {
+      GlobalMethods.errorDialog(
+        subtitle: error.toString(),
+        context: context,
+      );
+    } finally {
+      //Navigator.pop(context);
     }
+  }
   },
   style: ElevatedButton.styleFrom(
     backgroundColor: campuscolor,
