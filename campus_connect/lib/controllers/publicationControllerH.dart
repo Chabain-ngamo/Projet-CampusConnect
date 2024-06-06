@@ -3,6 +3,8 @@ import 'package:campus_connect/providers/publication_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:campus_connect/views/screens/publication_page.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,8 @@ class _PublicationControllerHState extends State<PublicationControllerH> {
   @override
   Widget build(BuildContext context) {
     final publicationModel = Provider.of<PublicationModel>(context);
+    final publicationCollection =
+        FirebaseFirestore.instance.collection('publications');
     // Convertir Timestamp en DateTime
     DateTime dateTime = publicationModel.publicationDate.toDate();
 
@@ -179,13 +183,36 @@ class _PublicationControllerHState extends State<PublicationControllerH> {
                     const SizedBox(
                       width: 10,
                     ),
-                    Text(
-                      publicationModel.nbLike.toString(),
-                      style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w800,
-                          color: campuscolor),
-                    ),
+                    StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                        stream: publicationCollection
+                            .doc(publicationModel.publicationId)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            final publicationData = snapshot.data?.data();
+                            final nbLike = publicationData?['nbLike'] ?? 0;
+                            return Text(
+                              "$nbLike",
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: campuscolor,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text(
+                              'Error: ${snapshot.error}',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: campuscolor,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            );
+                          } else {
+                            return const CircularProgressIndicator();
+                          }
+                        },
+                      ),
                     const SizedBox(
                       width: 20,
                     ),
@@ -206,14 +233,36 @@ class _PublicationControllerHState extends State<PublicationControllerH> {
                     const SizedBox(
                       width: 10,
                     ),
-                    Text(
-                      publicationModel.nbComment.toString(),
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.grey,
+                    StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                        stream: publicationCollection
+                            .doc(publicationModel.publicationId)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            final publicationData = snapshot.data?.data();
+                            final nbComment = publicationData?['nbComment'] ?? 0;
+                            return Text(
+                              "$nbComment",
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text(
+                              'Error: ${snapshot.error}',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            );
+                          } else {
+                            return const CircularProgressIndicator();
+                          }
+                        },
                       ),
-                    ),
                   ],
                 ),
               ),

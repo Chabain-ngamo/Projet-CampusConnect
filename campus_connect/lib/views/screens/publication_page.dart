@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:campus_connect/controllers/commentController.dart';
 import 'package:campus_connect/models/pulicationModel.dart';
+import 'package:campus_connect/providers/like_provider.dart';
 import 'package:campus_connect/providers/publication_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/services/global_methods.dart';
@@ -26,42 +27,26 @@ class PublicationPage extends StatefulWidget {
 class _PublicationPageState extends State<PublicationPage> {
   late PublicationModel getCurrPublication;
   final _messageController = TextEditingController();
+  bool isLiked = false;
+  bool? _islikelist;
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
     final publicationId = ModalRoute.of(context)!.settings.arguments as String;
-    final productProvider = Provider.of<PublicationProvider>(context);
-    getCurrPublication = productProvider.findPubById(publicationId);
+    final publicationProvider = Provider.of<PublicationProvider>(context);
+    final likeProvider = Provider.of<LikeProvider>(context);
+    final publicationCollection =
+        FirebaseFirestore.instance.collection('publications');
+    getCurrPublication = publicationProvider.findPubById(publicationId);
+    _islikelist =
+        likeProvider.getLikeItems.containsKey(getCurrPublication.publicationId);
     // Convertir Timestamp en DateTime
     DateTime dateTime = getCurrPublication.publicationDate.toDate();
 
     // Formatter la date
     String formattedDate =
         DateFormat('dd MMMM yyyy \'at\' h:mm a').format(dateTime);
-
-    final List<Map<String, String>> commentsList = [
-      {
-        'name': 'Duval',
-        'comment':
-            'pas mal labas comme initiative, elle a vraiment pou but de soutenir la femme pour la journée mondiale de lutte contre le cancer de sein',
-        'profil': 'assets/profil.jpeg',
-        'heure': '14:02',
-      },
-      {
-        'name': 'Chabain',
-        'comment':
-            'pas mal labas comme initiative, elle a vraiment pou but de soutenir la femme pour la journée mondiale de lutte contre le cancer de sein',
-        'profil': 'assets/profil.jpeg',
-        'heure': '11:02',
-      },
-      {
-        'name': 'Florent',
-        'comment':
-            'pas mal labas comme initiative, elle a vraiment pou but de soutenir la femme pour la journée mondiale de lutte contre le cancer de sein et dans cette initiative ils ont tous porter du rose',
-        'profil': 'assets/profil.jpeg',
-        'heure': '06:02',
-      },
-    ];
 
     return Scaffold(
         body: Stack(children: [
@@ -200,11 +185,9 @@ class _PublicationPageState extends State<PublicationPage> {
                     ),
                   ],
                 ),
-                child: Column(
-                  children: [
-                    CommentController(publicationId: publicationId)
-                  ]
-                ),
+                child: Column(children: [
+                  CommentController(publicationId: publicationId)
+                ]),
               ),
             ),
             SizedBox(
@@ -267,6 +250,7 @@ class _PublicationPageState extends State<PublicationPage> {
 
                           final userPhoto = userSnapshot['photo'];
                           double nbLike = 0;
+                          double nbComment = 0;
 
                           final commentId = const Uuid().v4();
 
@@ -291,6 +275,20 @@ class _PublicationPageState extends State<PublicationPage> {
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.CENTER,
                             );
+                            // Incrémenter la valeur de nbComment dans la publication
+                            DocumentSnapshot publicationSnapshot =
+                                await FirebaseFirestore.instance
+                                    .collection('publications')
+                                    .doc(publicationId)
+                                    .get();
+                            int currentNbComment =
+                                publicationSnapshot['nbComment'].toInt();
+                            await FirebaseFirestore.instance
+                                .collection('publications')
+                                .doc(publicationId)
+                                .update({
+                              'nbComment': currentNbComment + 1,
+                            });
                           } catch (error) {
                             GlobalMethods.errorDialog(
                               subtitle: error.toString(),
@@ -325,44 +323,110 @@ class _PublicationPageState extends State<PublicationPage> {
         bottom: 90,
         right: 20,
         child: GestureDetector(
-          onTap: () {},
-          child: Container(
-            height: 55,
-            width: 110,
-            decoration: BoxDecoration(
-              color: campuscolor,
-              borderRadius: const BorderRadius.all(
-                Radius.circular(18),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade200,
-                  spreadRadius: 4,
-                  blurRadius: 6,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Icon(
-                  Icons.thumb_up_alt_outlined,
-                  color: Colors.white,
-                  size: 28,
-                ),
-                Text(
-                  '2.1K',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontFamily: 'CrimsonText',
-                    fontWeight: FontWeight.w400,
+          onTap: () async {
+            setState(() {
+              loading = true;
+            });
+            try {
+              final User? user = authInstance.currentUser;
+
+              if (user == null) {
+                GlobalMethods.errorDialog(
+                    subtitle: 'No user found, Please login first',
+                    context: context);
+                return;
+              }
+              if (_islikelist == false && _islikelist != null) {
+                await GlobalMethods.addToLikelist(
+                    publicationId: publicationId, context: context);
+              } else {
+                await likeProvider.removeOneItem(
+                    likeId: likeProvider
+                        .getLikeItems[getCurrPublication.publicationId]!.id,
+                    publicationId: publicationId);
+              }
+              await likeProvider.fetchLikelist();
+              setState(() {
+                loading = false;
+              });
+            } catch (error) {
+              GlobalMethods.errorDialog(subtitle: '$error', context: context);
+            } finally {
+              setState(() {
+                loading = false;
+              });
+            }
+          },
+          child: loading
+              ? const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: SizedBox(
+                      height: 15,
+                      width: 15,
+                      child: CircularProgressIndicator()),
+                )
+              : Container(
+                  height: 55,
+                  width: 110,
+                  decoration: BoxDecoration(
+                    color: _islikelist != null && _islikelist == true
+                        ? campuscolor
+                        : Colors.grey,
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(18),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade200,
+                        spreadRadius: 4,
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Icon(
+                        Icons.thumb_up_alt_outlined,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                      StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                        stream: publicationCollection
+                            .doc(publicationId)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            final publicationData = snapshot.data?.data();
+                            final nbLikes = publicationData?['nbLike'] ?? 0;
+                            return Text(
+                              "$nbLikes",
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontFamily: 'CrimsonText',
+                                fontWeight: FontWeight.w400,
+                              ),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Text(
+                              'Error: ${snapshot.error}',
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontFamily: 'CrimsonText',
+                                fontWeight: FontWeight.w400,
+                              ),
+                            );
+                          } else {
+                            return const CircularProgressIndicator();
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
         ),
       )
     ]));

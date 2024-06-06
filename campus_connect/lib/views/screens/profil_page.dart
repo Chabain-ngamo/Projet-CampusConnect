@@ -44,7 +44,6 @@ class _ProfilPageState extends State<ProfilPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         body: Stack(children: [
       SingleChildScrollView(
@@ -599,15 +598,51 @@ class _ProfilPageState extends State<ProfilPage> {
                                       Column(
                                         children: [
                                           Row(
-                                            children: const [
-                                              Text(
-                                                '33',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 24,
-                                                  fontFamily: 'Roboto',
-                                                  fontWeight: FontWeight.w800,
-                                                ),
+                                            children: [
+                                              StreamBuilder<
+                                                  QuerySnapshot<
+                                                      Map<String, dynamic>>>(
+                                                stream: FirebaseFirestore
+                                                    .instance
+                                                    .collection('publications')
+                                                    .where('userId',
+                                                        isEqualTo: FirebaseAuth
+                                                            .instance
+                                                            .currentUser
+                                                            ?.uid)
+                                                    .snapshots(),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.hasData) {
+                                                    final publicationCount =
+                                                        snapshot.data?.docs
+                                                                .length ??
+                                                            0;
+                                                    return Text(
+                                                      "$publicationCount",
+                                                      style: const TextStyle(
+                                                        fontSize: 24,
+                                                        color: Colors.white,
+                                                        fontFamily: 'Roboto',
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                      ),
+                                                    );
+                                                  } else if (snapshot
+                                                      .hasError) {
+                                                    return Text(
+                                                      'Error',
+                                                      style: const TextStyle(
+                                                        fontSize: 10,
+                                                        color: Colors.white,
+                                                        fontFamily: 'Roboto',
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    return const CircularProgressIndicator();
+                                                  }
+                                                },
                                               ),
                                             ],
                                           ),
@@ -628,16 +663,46 @@ class _ProfilPageState extends State<ProfilPage> {
                                       Column(
                                         children: [
                                           Row(
-                                            children: const [
-                                              Text(
-                                                '50',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 24,
-                                                  fontFamily: 'Roboto',
-                                                  fontWeight: FontWeight.w800,
-                                                ),
-                                              ),
+                                            children: [
+                                              StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                                              stream: FirebaseFirestore.instance
+                                                  .collection('publications')
+                                                  .where('userId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+                                                  .snapshots(),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.hasData) {
+                                                  num totalLikes = 0;
+                                                  for (final doc in snapshot.data!.docs) {
+                                                    final data = doc.data();
+                                                    final nbLike = data['nbLike'] ?? 0;
+                                                    totalLikes += nbLike.toInt();
+                                                  }
+                                                  return Text(
+                                                    "$totalLikes",
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 24,
+                                                      fontFamily: 'Roboto',
+                                                      fontWeight: FontWeight.w800,
+                                                    ),
+                                                  );
+                                                } else if (snapshot.hasError) {
+                                                  return Text(
+                                                    'Error: ${snapshot.error}',
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 24,
+                                                      fontFamily: 'Roboto',
+                                                      fontWeight: FontWeight.w800,
+                                                    ),
+                                                  );
+                                                } else {
+                                                  return const CircularProgressIndicator();
+                                                }
+                                              },
+                                            ),
+
+                                              
                                             ],
                                           ),
                                           Row(
@@ -657,15 +722,51 @@ class _ProfilPageState extends State<ProfilPage> {
                                       Column(
                                         children: [
                                           Row(
-                                            children: const [
-                                              Text(
-                                                '230',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 24,
-                                                  fontFamily: 'Roboto',
-                                                  fontWeight: FontWeight.w800,
-                                                ),
+                                            children: [
+                                              StreamBuilder<
+                                                  QuerySnapshot<
+                                                      Map<String, dynamic>>>(
+                                                stream: FirebaseFirestore
+                                                    .instance
+                                                    .collection('comments')
+                                                    .where('userId',
+                                                        isEqualTo: FirebaseAuth
+                                                            .instance
+                                                            .currentUser
+                                                            ?.uid)
+                                                    .snapshots(),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.hasData) {
+                                                    final commentCount =
+                                                        snapshot.data?.docs
+                                                                .length ??
+                                                            0;
+                                                    return Text(
+                                                      "$commentCount",
+                                                      style: const TextStyle(
+                                                        fontSize: 24,
+                                                        color: Colors.white,
+                                                        fontFamily: 'Roboto',
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                      ),
+                                                    );
+                                                  } else if (snapshot
+                                                      .hasError) {
+                                                    return Text(
+                                                      'Error',
+                                                      style: const TextStyle(
+                                                        fontSize: 10,
+                                                        color: Colors.white,
+                                                        fontFamily: 'Roboto',
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    return const CircularProgressIndicator();
+                                                  }
+                                                },
                                               ),
                                             ],
                                           ),
@@ -731,12 +832,9 @@ class _ProfilPageState extends State<ProfilPage> {
                               ),
                             ],
                           ),
-                          child: Column(
-                            children: [
-                              PublicationControllerP(),
-                            ]
-                                
-                          ),
+                          child: Column(children: [
+                            PublicationControllerP(),
+                          ]),
                         ),
                       )
                     ],

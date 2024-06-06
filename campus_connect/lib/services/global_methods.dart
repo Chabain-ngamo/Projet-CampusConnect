@@ -103,27 +103,27 @@ class GlobalMethods {
   }
 
 
-  /*static Future<void> addToWishlist(
-      {required String productId, required BuildContext context}) async {
+  static Future<void> addToLikelist(
+      {required String publicationId, required BuildContext context}) async {
     final User? user = authInstance.currentUser;
     final _uid = user!.uid;
-    final wishlistId = const Uuid().v4();
+    final likeId = const Uuid().v4();
     try {
       FirebaseFirestore.instance.collection('users').doc(_uid).update({
-        'userWish': FieldValue.arrayUnion([
+        'userLike': FieldValue.arrayUnion([
           {
-            'wishlistId': wishlistId,
-            'productId': productId,
+            'likeId': likeId,
+            'publicationId': publicationId,
           }
         ])
       });
       await Fluttertoast.showToast(
-        msg: "Item has been added to your wishlist",
+        msg: "post has been added to your likelist",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
       );
     } catch (error) {
       errorDialog(subtitle: error.toString(), context: context);
     }
-  }*/
+  }
 }
