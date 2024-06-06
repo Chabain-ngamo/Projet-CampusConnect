@@ -1,4 +1,5 @@
 import 'package:campus_connect/models/userModel.dart';
+import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -16,12 +17,17 @@ class _ProfilSearchControllerState extends State<ProfilSearchController> {
   @override
   Widget build(BuildContext context) {
     final userModel = Provider.of<UserModel>(context);
+    final themeState = Provider.of<DarkThemeProvider>(context);
+    final Color color = themeState.getDarkTheme ? Colors.white : Colors.black;
+    final Color colorB =
+        themeState.getDarkTheme ? Color(0xFF1A1B20) : Colors.white;
+
     return Container(
       margin: const EdgeInsets.all(10),
       height: 180,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorB,
         borderRadius: const BorderRadius.all(
           Radius.circular(18),
         ),
@@ -68,8 +74,8 @@ class _ProfilSearchControllerState extends State<ProfilSearchController> {
                                   children: [
                                     Text(
                                       '10',
-                                      style: const TextStyle(
-                                        color: Colors.black,
+                                      style:  TextStyle(
+                                        color: color,
                                         fontSize: 24,
                                         fontFamily: 'Roboto',
                                         fontWeight: FontWeight.w800,
@@ -97,8 +103,8 @@ class _ProfilSearchControllerState extends State<ProfilSearchController> {
                                   children: [
                                     Text(
                                       '20',
-                                      style: const TextStyle(
-                                        color: Colors.black,
+                                      style:  TextStyle(
+                                        color: color,
                                         fontSize: 24,
                                         fontFamily: 'Roboto',
                                         fontWeight: FontWeight.w800,
@@ -126,8 +132,8 @@ class _ProfilSearchControllerState extends State<ProfilSearchController> {
                                   children: [
                                     Text(
                                       '15',
-                                      style: const TextStyle(
-                                        color: Colors.black,
+                                      style:  TextStyle(
+                                        color: color,
                                         fontSize: 24,
                                         fontFamily: 'Roboto',
                                         fontWeight: FontWeight.w800,
@@ -195,9 +201,9 @@ class _ProfilSearchControllerState extends State<ProfilSearchController> {
                 children: [
                   Text(
                     userModel.userName,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 20,
-                      color: Colors.black,
+                      color: color,
                       fontFamily: 'Roboto',
                       fontWeight: FontWeight.w800,
                     ),
@@ -213,17 +219,17 @@ class _ProfilSearchControllerState extends State<ProfilSearchController> {
                 children: [
                   Text(
                     'promotion ',
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 20,
-                      color: Colors.black,
+                      color: color,
                       fontFamily: 'CrimsonText',
                     ),
                   ),
                   Text(
                     userModel.userPromo,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 20,
-                      color: Colors.black,
+                      color: color,
                       fontFamily: 'CrimsonText',
                       fontWeight: FontWeight.w800,
                     ),

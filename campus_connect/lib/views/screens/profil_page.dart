@@ -1,4 +1,5 @@
 import 'package:campus_connect/controllers/publicationControllerP.dart';
+import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/screens/auth_page.dart';
 import 'package:campus_connect/views/screens/edit_profil_page.dart';
@@ -8,6 +9,7 @@ import 'package:campus_connect/views/screens/setting_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 class ProfilPage extends StatefulWidget {
@@ -44,7 +46,12 @@ class _ProfilPageState extends State<ProfilPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeState = Provider.of<DarkThemeProvider>(context);
+    final Color color = themeState.getDarkTheme ? Colors.white : Colors.black;
+    final Color colorB =
+        themeState.getDarkTheme ? Color(0xFF1A1B20) : Colors.white;
     return Scaffold(
+      backgroundColor: colorB,
         body: Stack(children: [
       SingleChildScrollView(
           child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
@@ -87,27 +94,22 @@ class _ProfilPageState extends State<ProfilPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
+                               Text(
                                 "Profile",
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: color,
                                   fontSize: 24,
                                   fontFamily: 'Roboto',
                                   fontWeight: FontWeight.w800,
                                 ),
                               ),
                               PopupMenuButton<int>(
-                                icon: const Icon(
+                                icon:  Icon(
                                   Icons.more_horiz_outlined,
-                                  color: Colors.black,
+                                  color: color,
                                   size: 35,
                                 ),
                                 onSelected: (int result) {
-                                  /*if (result == 0) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Ok selected')),
-                                    );
-                                  }*/
                                 },
                                 itemBuilder: (BuildContext context) =>
                                     <PopupMenuEntry<int>>[
@@ -139,10 +141,10 @@ class _ProfilPageState extends State<ProfilPage> {
                                               const SizedBox(
                                                 width: 10,
                                               ),
-                                              const Text(
+                                               Text(
                                                 'Settings',
                                                 style: TextStyle(
-                                                  color: Colors.black,
+                                                  color: color,
                                                   fontSize: 16,
                                                   fontFamily: 'Roboto',
                                                   fontWeight: FontWeight.w800,
@@ -179,10 +181,10 @@ class _ProfilPageState extends State<ProfilPage> {
                                               const SizedBox(
                                                 width: 10,
                                               ),
-                                              const Text(
+                                               Text(
                                                 'Notifications',
                                                 style: TextStyle(
-                                                  color: Colors.black,
+                                                  color: color,
                                                   fontSize: 16,
                                                   fontFamily: 'Roboto',
                                                   fontWeight: FontWeight.w800,
@@ -219,10 +221,10 @@ class _ProfilPageState extends State<ProfilPage> {
                                               const SizedBox(
                                                 width: 10,
                                               ),
-                                              const Text(
+                                               Text(
                                                 'Meteo',
                                                 style: TextStyle(
-                                                  color: Colors.black,
+                                                  color: color,
                                                   fontSize: 16,
                                                   fontFamily: 'Roboto',
                                                   fontWeight: FontWeight.w800,
@@ -259,10 +261,10 @@ class _ProfilPageState extends State<ProfilPage> {
                                               const SizedBox(
                                                 width: 10,
                                               ),
-                                              const Text(
+                                               Text(
                                                 'Edit',
                                                 style: TextStyle(
-                                                  color: Colors.black,
+                                                  color: color,
                                                   fontSize: 16,
                                                   fontFamily: 'Roboto',
                                                   fontWeight: FontWeight.w800,
@@ -275,6 +277,7 @@ class _ProfilPageState extends State<ProfilPage> {
                                     ),
                                   ),
                                 ],
+                                color: colorB,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16.0),
                                 ),
@@ -296,7 +299,7 @@ class _ProfilPageState extends State<ProfilPage> {
                                   height: 370,
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: colorB,
                                     borderRadius: const BorderRadius.all(
                                       Radius.circular(18),
                                     ),
@@ -371,9 +374,8 @@ class _ProfilPageState extends State<ProfilPage> {
                                                                 Text(
                                                                   userName,
                                                                   style:
-                                                                      const TextStyle(
-                                                                    color: Colors
-                                                                        .black,
+                                                                       TextStyle(
+                                                                    color: color,
                                                                     fontSize:
                                                                         20,
                                                                     fontFamily:
@@ -419,12 +421,12 @@ class _ProfilPageState extends State<ProfilPage> {
                                         margin: const EdgeInsets.only(
                                             left: 35, bottom: 15),
                                         child: Row(
-                                          children: const [
+                                          children:  [
                                             Text(
                                               'About me',
                                               style: TextStyle(
                                                 fontSize: 18,
-                                                color: Colors.black,
+                                                color: color,
                                                 fontFamily: 'Roboto',
                                                 fontWeight: FontWeight.w800,
                                               ),
@@ -798,11 +800,11 @@ class _ProfilPageState extends State<ProfilPage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
-                          children: const [
+                          children:  [
                             Text(
                               "My Publications",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: color,
                                 fontSize: 24,
                                 fontFamily: 'Roboto',
                                 fontWeight: FontWeight.w800,
@@ -817,15 +819,15 @@ class _ProfilPageState extends State<ProfilPage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 1),
                         child: Container(
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
+                          decoration: BoxDecoration(
+                            color: colorB,
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(30),
                               topRight: Radius.circular(30),
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: fondcolor,
+                                color: color,
                                 spreadRadius: 4,
                                 blurRadius: 6,
                                 offset: Offset(0, 3),

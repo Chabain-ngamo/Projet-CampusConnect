@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:campus_connect/controllers/commentController.dart';
 import 'package:campus_connect/models/pulicationModel.dart';
+import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/providers/like_provider.dart';
 import 'package:campus_connect/providers/publication_provider.dart';
 import 'package:campus_connect/services/constant.dart';
@@ -41,6 +42,11 @@ class _PublicationPageState extends State<PublicationPage> {
     getCurrPublication = publicationProvider.findPubById(publicationId);
     _islikelist =
         likeProvider.getLikeItems.containsKey(getCurrPublication.publicationId);
+
+    final themeState = Provider.of<DarkThemeProvider>(context);
+    final Color color = themeState.getDarkTheme ? Colors.white : Colors.black;
+    final Color colorB =
+        themeState.getDarkTheme ? Color(0xFF1A1B20) : Colors.white;
     // Convertir Timestamp en DateTime
     DateTime dateTime = getCurrPublication.publicationDate.toDate();
 
@@ -49,6 +55,7 @@ class _PublicationPageState extends State<PublicationPage> {
         DateFormat('dd MMMM yyyy \'at\' h:mm a').format(dateTime);
 
     return Scaffold(
+      backgroundColor: colorB,
         body: Stack(children: [
       SingleChildScrollView(
         child: Column(
@@ -83,7 +90,7 @@ class _PublicationPageState extends State<PublicationPage> {
                             Text(
                               getCurrPublication.userName,
                               style: TextStyle(
-                                color: Colors.black,
+                                color: color,
                                 fontSize: 20,
                                 fontFamily: 'Roboto',
                                 fontWeight: FontWeight.w800,
@@ -140,7 +147,7 @@ class _PublicationPageState extends State<PublicationPage> {
                 getCurrPublication.message,
                 style: TextStyle(
                   fontSize: 18,
-                  color: Colors.black,
+                  color: color,
                   fontFamily: 'CrimsonText',
                   fontWeight: FontWeight.w400,
                 ),
@@ -149,11 +156,11 @@ class _PublicationPageState extends State<PublicationPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
-                children: const [
+                children:  [
                   Text(
                     "Comments",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: color,
                       fontSize: 22,
                       fontFamily: 'Roboto',
                       fontWeight: FontWeight.w800,
@@ -168,8 +175,8 @@ class _PublicationPageState extends State<PublicationPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
+                decoration:  BoxDecoration(
+                  color: colorB,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),

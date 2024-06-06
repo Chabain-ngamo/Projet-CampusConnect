@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/screens/add_publication.dart';
 import 'package:campus_connect/views/screens/chat_page.dart';
@@ -7,6 +8,7 @@ import 'package:campus_connect/views/screens/home_screen_page.dart';
 import 'package:campus_connect/views/screens/profil_page.dart';
 import 'package:campus_connect/views/screens/search_page.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 class MainNavigationBar extends StatefulWidget {
@@ -47,6 +49,11 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
+    final themeState = Provider.of<DarkThemeProvider>(context);
+    final Color color = themeState.getDarkTheme ? Colors.white : Colors.black;
+    final Color colorB =
+        themeState.getDarkTheme ? Color(0xFF1A1B20) : Colors.white;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 240, 235, 235),
       body: Stack(
@@ -74,7 +81,7 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
                       _pageIndex = value;
                     });
                   },
-                  backgroundColor: Colors.white,
+                  backgroundColor: colorB,
                   unselectedItemColor: Colors.grey,
                   selectedItemColor: campuscolor,
                   type: BottomNavigationBarType.fixed,
@@ -116,7 +123,7 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
                   context: context,
                   builder: (context) => Container(
                     decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: colorB,
                         borderRadius:
                             BorderRadius.vertical(top: Radius.circular(30))),
                     child: AddPublication(),

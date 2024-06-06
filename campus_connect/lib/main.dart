@@ -1,5 +1,6 @@
 import 'package:campus_connect/firebase_options.dart';
 import 'package:campus_connect/main_navigationbar.dart';
+import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/providers/like_provider.dart';
 import 'package:campus_connect/providers/publication_provider.dart';
 import 'package:campus_connect/providers/user_provider.dart';
@@ -29,6 +30,7 @@ class _MyAppState extends State<MyApp> {
   PublicationProvider publicationProvider = PublicationProvider();
   LikeProvider likeProvider = LikeProvider();
   UsersProvider usersProvider = UsersProvider();
+  DarkThemeProvider themeState = DarkThemeProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +42,8 @@ class _MyAppState extends State<MyApp> {
             value: likeProvider),
         ChangeNotifierProvider<UsersProvider>.value(
             value: usersProvider),
+        ChangeNotifierProvider<DarkThemeProvider>.value(
+            value: themeState),
       ],
       child: Consumer<PublicationProvider>(
         builder: (context, provider, _) {

@@ -1,4 +1,5 @@
 import 'package:campus_connect/models/pulicationModel.dart';
+import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/providers/publication_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -22,6 +23,10 @@ class _PublicationControllerHState extends State<PublicationControllerH> {
     final publicationModel = Provider.of<PublicationModel>(context);
     final publicationCollection =
         FirebaseFirestore.instance.collection('publications');
+    final themeState = Provider.of<DarkThemeProvider>(context);
+    final Color color = themeState.getDarkTheme ? Colors.white : Colors.black;
+    final Color colorB =
+        themeState.getDarkTheme ? Color(0xFF1A1B20) : Colors.white;
     // Convertir Timestamp en DateTime
     DateTime dateTime = publicationModel.publicationDate.toDate();
 
@@ -47,7 +52,7 @@ class _PublicationControllerHState extends State<PublicationControllerH> {
         height: 500,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorB,
           borderRadius: const BorderRadius.all(
             Radius.circular(18),
           ),
@@ -91,8 +96,8 @@ class _PublicationControllerHState extends State<PublicationControllerH> {
                             children: [
                               Text(
                                 publicationModel.userName,
-                                style: const TextStyle(
-                                  color: Colors.black,
+                                style:  TextStyle(
+                                  color: color,
                                   fontSize: 20,
                                   fontFamily: 'Roboto',
                                   fontWeight: FontWeight.w800,
@@ -128,9 +133,9 @@ class _PublicationControllerHState extends State<PublicationControllerH> {
                       width: 330,
                       child: Text(
                         publicationModel.message,
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontSize: 16,
-                          color: Colors.black,
+                          color: color,
                           fontFamily: 'CrimsonText',
                           fontWeight: FontWeight.w400,
                         ),
@@ -274,8 +279,8 @@ class _PublicationControllerHState extends State<PublicationControllerH> {
             child: Container(
               width: 65,
               height: 70,
-              decoration: const BoxDecoration(
-                color: Colors.white,
+              decoration:  BoxDecoration(
+                color: colorB,
                 borderRadius: BorderRadius.all(Radius.circular(15)),
                 boxShadow: [
                   BoxShadow(
@@ -294,7 +299,7 @@ class _PublicationControllerHState extends State<PublicationControllerH> {
                       daysDate,
                       style: TextStyle(
                         fontSize: 24,
-                        color: Colors.black,
+                        color: color,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Roboto',
                       ),

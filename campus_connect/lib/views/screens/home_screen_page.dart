@@ -1,5 +1,6 @@
 import 'package:campus_connect/controllers/publicationControllerH.dart';
 import 'package:campus_connect/models/pulicationModel.dart';
+import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/providers/publication_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/screens/publication_page.dart';
@@ -27,9 +28,14 @@ class _HomeScreenPageState extends State<HomeScreenPage> {
   Widget build(BuildContext context) {
     final publicationProvider = Provider.of<PublicationProvider>(context);
     List<PublicationModel> allPublications = publicationProvider.getPublication;
+    final themeState = Provider.of<DarkThemeProvider>(context);
+    final Color color = themeState.getDarkTheme ? Colors.white : Colors.black;
+    final Color colorB =
+        themeState.getDarkTheme ? Color(0xFF1A1B20) : Colors.white;
 
 
     return Scaffold(
+      backgroundColor: colorB,
         body: SingleChildScrollView(
       child: Column(
         children: [
@@ -76,11 +82,11 @@ class _HomeScreenPageState extends State<HomeScreenPage> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: const [
+              children:  [
                 Text(
                   "Explore today's",
                   style: TextStyle(
-                      color: Colors.black,
+                      color: color,
                       fontSize: 24,
                       fontFamily: 'Roboto',
                       fontWeight: FontWeight.bold),

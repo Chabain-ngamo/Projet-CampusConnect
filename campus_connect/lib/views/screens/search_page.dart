@@ -1,5 +1,6 @@
 import 'package:campus_connect/controllers/profilSearchController.dart';
 import 'package:campus_connect/models/userModel.dart';
+import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/providers/user_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/screens/chat_detail_page.dart';
@@ -36,7 +37,13 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     final usersProvider = Provider.of<UsersProvider>(context);
+    final themeState = Provider.of<DarkThemeProvider>(context);
+    final Color color = themeState.getDarkTheme ? Colors.white : Colors.black;
+    final Color colorB =
+        themeState.getDarkTheme ? Color(0xFF1A1B20) : Colors.white;
+
     return Scaffold(
+      backgroundColor: colorB,
         body: SingleChildScrollView(
       child: Column(
         children: [

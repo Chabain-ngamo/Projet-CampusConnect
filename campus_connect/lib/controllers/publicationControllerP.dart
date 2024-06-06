@@ -1,4 +1,5 @@
 import 'package:campus_connect/models/pulicationModel.dart';
+import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/services/global_methods.dart';
 import 'package:campus_connect/views/screens/edit_publication.dart';
@@ -26,6 +27,10 @@ class _PublicationControllerPState extends State<PublicationControllerP> {
   @override
   Widget build(BuildContext context) {
     //final publicationModel = Provider.of<PublicationModel>(context);
+    final themeState = Provider.of<DarkThemeProvider>(context);
+    final Color color = themeState.getDarkTheme ? Colors.white : Colors.black;
+    final Color colorB =
+        themeState.getDarkTheme ? Color(0xFF1A1B20) : Colors.white;
 
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: _publicationsStream,
@@ -114,7 +119,7 @@ class _PublicationControllerPState extends State<PublicationControllerP> {
                                           context: context,
                                           builder: (context) => Container(
                                             decoration: BoxDecoration(
-                                                color: Colors.white,
+                                                color: colorB,
                                                 borderRadius:
                                                     BorderRadius.vertical(
                                                         top: Radius.circular(
@@ -132,6 +137,7 @@ class _PublicationControllerPState extends State<PublicationControllerP> {
                                   width: 20,
                                 ),
                                 IconButton(
+                                  color:colorB,
                                     onPressed: () async {
                                       showDialog(
                                         context: context,
@@ -203,9 +209,9 @@ class _PublicationControllerPState extends State<PublicationControllerP> {
                                 width: 150,
                                 child: Text(
                                   message,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 16,
-                                    color: Colors.black,
+                                    color: color,
                                     fontFamily: 'CrimsonText',
                                     fontWeight: FontWeight.w400,
                                   ),
