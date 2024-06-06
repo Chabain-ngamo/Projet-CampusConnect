@@ -9,6 +9,8 @@ import 'package:campus_connect/views/screens/publication_page.dart';
 import 'package:campus_connect/views/screens/splash_screen_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
@@ -68,6 +70,10 @@ class _MyAppState extends State<MyApp> {
                     ),
                   ),
             },
+            locale: const Locale("en"),
+            
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
             onGenerateRoute: (settings) {
               if (settings.name == '/publicationPage') {
                 return MaterialPageRoute(

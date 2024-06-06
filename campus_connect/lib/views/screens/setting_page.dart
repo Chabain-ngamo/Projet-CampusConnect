@@ -1,6 +1,7 @@
 import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/widgets/back_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -46,7 +47,7 @@ class _SettingPageState extends State<SettingPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                              Text(
-                              "Settings",
+                              AppLocalizations.of(context)!.settings,
                               style: TextStyle(
                                 color: color,
                                   //color: darkColor,
