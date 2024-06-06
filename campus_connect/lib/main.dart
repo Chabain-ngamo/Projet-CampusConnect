@@ -2,6 +2,7 @@ import 'package:campus_connect/firebase_options.dart';
 import 'package:campus_connect/main_navigationbar.dart';
 import 'package:campus_connect/providers/like_provider.dart';
 import 'package:campus_connect/providers/publication_provider.dart';
+import 'package:campus_connect/providers/user_provider.dart';
 import 'package:campus_connect/views/screens/onboarding_page.dart';
 import 'package:campus_connect/views/screens/publication_page.dart';
 import 'package:campus_connect/views/screens/splash_screen_page.dart';
@@ -27,6 +28,7 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   PublicationProvider publicationProvider = PublicationProvider();
   LikeProvider likeProvider = LikeProvider();
+  UsersProvider usersProvider = UsersProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,8 @@ class _MyAppState extends State<MyApp> {
             value: publicationProvider),
         ChangeNotifierProvider<LikeProvider>.value(
             value: likeProvider),
+        ChangeNotifierProvider<UsersProvider>.value(
+            value: usersProvider),
       ],
       child: Consumer<PublicationProvider>(
         builder: (context, provider, _) {

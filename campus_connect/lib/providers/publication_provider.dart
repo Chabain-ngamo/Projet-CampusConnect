@@ -13,10 +13,10 @@ class PublicationProvider with ChangeNotifier {
     await FirebaseFirestore.instance
         .collection('publications')
         .get()
-        .then((QuerySnapshot ordersSnapshot) {
+        .then((QuerySnapshot publiSnapshot) {
       _publication = [];
       // _publication.clear();
-      ordersSnapshot.docs.forEach((element) {
+      publiSnapshot.docs.forEach((element) {
         _publication.insert(
           0,
           PublicationModel(
