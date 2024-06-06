@@ -35,4 +35,11 @@ class PublicationProvider with ChangeNotifier {
     });
     notifyListeners();
   }
+
+
+  PublicationModel findPubById(String publicationId) {
+    return _publication.firstWhere((element) => element.publicationId == publicationId);
+  }
+
+
 }

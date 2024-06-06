@@ -2,6 +2,7 @@ import 'package:campus_connect/firebase_options.dart';
 import 'package:campus_connect/main_navigationbar.dart';
 import 'package:campus_connect/providers/publication_provider.dart';
 import 'package:campus_connect/views/screens/onboarding_page.dart';
+import 'package:campus_connect/views/screens/publication_page.dart';
 import 'package:campus_connect/views/screens/splash_screen_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -10,9 +11,7 @@ import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -29,17 +28,17 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<PublicationProvider>.value(value: publicationProvider),
+        ChangeNotifierProvider<PublicationProvider>.value(
+            value: publicationProvider),
       ],
       child: Consumer<PublicationProvider>(
         builder: (context, provider, _) {
-        return MaterialApp(
-          title: 'Campus Connect',
-          routes: {
-            '/': (context) => SplashScreen(
+          return MaterialApp(
+            title: 'Campus Connect',
+            routes: {
+              '/': (context) => SplashScreen(
                     child: FutureBuilder<SharedPreferences>(
                       future: SharedPreferences.getInstance(),
                       builder: (context, snapshot) {
@@ -56,13 +55,19 @@ class _MyAppState extends State<MyApp> {
                       },
                     ),
                   ),
-          
-          },
-        );
+            },
+            onGenerateRoute: (settings) {
+              if (settings.name == '/publicationPage') {
+                return MaterialPageRoute(
+                  builder: (context) => PublicationPage(),
+                  settings: settings,
+                );
+              }
+              return null; // Important: retourner null pour les autres routes non gérées
+            },
+          );
         },
       ),
     );
   }
 }
-
-

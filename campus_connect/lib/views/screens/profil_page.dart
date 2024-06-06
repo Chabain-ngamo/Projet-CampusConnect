@@ -1,3 +1,4 @@
+import 'package:campus_connect/controllers/publicationControllerP.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/screens/auth_page.dart';
 import 'package:campus_connect/views/screens/edit_profil_page.dart';
@@ -43,26 +44,6 @@ class _ProfilPageState extends State<ProfilPage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, String>> commentsList = [
-      {
-        'name': 'JPO',
-        'description': 'Au coeur d’un évenement mémorable',
-        'photo': 'assets/profil.jpeg',
-        'likes': '2.1k',
-      },
-      {
-        'name': 'JPO',
-        'description': 'Au coeur d’un évenement mémorable',
-        'photo': 'assets/profil.jpeg',
-        'likes': '2.1k',
-      },
-      {
-        'name': 'JPO',
-        'description': 'Au coeur d’un évenement mémorable',
-        'photo': 'assets/profil.jpeg',
-        'likes': '2.1k',
-      },
-    ];
 
     return Scaffold(
         body: Stack(children: [
@@ -124,10 +105,10 @@ class _ProfilPageState extends State<ProfilPage> {
                                 ),
                                 onSelected: (int result) {
                                   /*if (result == 0) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Ok selected')),
-                          );
-                        }*/
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('Ok selected')),
+                                    );
+                                  }*/
                                 },
                                 itemBuilder: (BuildContext context) =>
                                     <PopupMenuEntry<int>>[
@@ -751,25 +732,10 @@ class _ProfilPageState extends State<ProfilPage> {
                             ],
                           ),
                           child: Column(
-                            children:
-                                List.generate(commentsList.length, (index) {
-                              return Column(
-                                children: [
-                                  PubliCard(
-                                    commentData: commentsList[index],
-                                  ),
-                                  if (index < commentsList.length - 1)
-                                    const Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 30),
-                                      child: Divider(
-                                          color: Color.fromARGB(
-                                              116, 158, 158, 158),
-                                          thickness: 1),
-                                    ),
-                                ],
-                              );
-                            }),
+                            children: [
+                              PublicationControllerP(),
+                            ]
+                                
                           ),
                         ),
                       )
@@ -788,88 +754,5 @@ class _ProfilPageState extends State<ProfilPage> {
                 );
               })),
     ]));
-  }
-}
-
-class PubliCard extends StatelessWidget {
-  final Map<String, String> commentData;
-
-  PubliCard({
-    required this.commentData,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(20.0)),
-              child: Image.asset(
-                commentData['photo']!,
-                fit: BoxFit.cover,
-                width: 130,
-                height: 170,
-              ),
-            ),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                commentData['name']!,
-                style: const TextStyle(
-                  color: campuscolor,
-                  fontSize: 20,
-                  fontFamily: 'Roboto',
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: 80,
-                width: 150,
-                child: Text(
-                  commentData['description']!,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontFamily: 'CrimsonText',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.thumb_up_alt_outlined,
-                    color: Colors.grey,
-                    size: 26,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    commentData['likes']!,
-                    style: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 20,
-                      fontFamily: 'CrimsonText',
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
   }
 }

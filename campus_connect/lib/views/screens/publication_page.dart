@@ -1,9 +1,22 @@
+import 'dart:math' as math;
+import 'package:campus_connect/controllers/commentController.dart';
+import 'package:campus_connect/models/pulicationModel.dart';
+import 'package:campus_connect/providers/publication_provider.dart';
 import 'package:campus_connect/services/constant.dart';
+import 'package:campus_connect/services/global_methods.dart';
 import 'package:campus_connect/views/widgets/back_button.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:campus_connect/views/widgets/likesW.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 
 class PublicationPage extends StatefulWidget {
+  static const String routeName = '/publicationPage';
   const PublicationPage({super.key});
 
   @override
@@ -11,8 +24,21 @@ class PublicationPage extends StatefulWidget {
 }
 
 class _PublicationPageState extends State<PublicationPage> {
+  late PublicationModel getCurrPublication;
+  final _messageController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    final publicationId = ModalRoute.of(context)!.settings.arguments as String;
+    final productProvider = Provider.of<PublicationProvider>(context);
+    getCurrPublication = productProvider.findPubById(publicationId);
+    // Convertir Timestamp en DateTime
+    DateTime dateTime = getCurrPublication.publicationDate.toDate();
+
+    // Formatter la date
+    String formattedDate =
+        DateFormat('dd MMMM yyyy \'at\' h:mm a').format(dateTime);
+
     final List<Map<String, String>> commentsList = [
       {
         'name': 'Duval',
@@ -51,8 +77,10 @@ class _PublicationPageState extends State<PublicationPage> {
                 children: [
                   ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-                    child: Image.asset(
-                      'assets/profil.jpeg',
+                    child: Image(
+                      image: CachedNetworkImageProvider(
+                        getCurrPublication.userPhoto,
+                      ),
                       fit: BoxFit.cover,
                       width: 55,
                       height: 55,
@@ -66,9 +94,9 @@ class _PublicationPageState extends State<PublicationPage> {
                     child: Column(
                       children: [
                         Row(
-                          children: const [
+                          children: [
                             Text(
-                              "Duval",
+                              getCurrPublication.userName,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 20,
@@ -79,9 +107,9 @@ class _PublicationPageState extends State<PublicationPage> {
                           ],
                         ),
                         Row(
-                          children: const [
+                          children: [
                             Text(
-                              "28 May 2024 at 10:02 AM",
+                              formattedDate,
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 18,
@@ -101,11 +129,14 @@ class _PublicationPageState extends State<PublicationPage> {
             ),
             Container(
               height: 250,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(
-                    'assets/theme3.png',
+                  image: CachedNetworkImageProvider(
+                    getCurrPublication.publiPhoto,
                   ),
+                  /*image: AssetImage(
+                    'assets/theme3.png',
+                  ),*/
                   fit: BoxFit.cover,
                 ),
                 borderRadius: BorderRadius.only(
@@ -120,8 +151,8 @@ class _PublicationPageState extends State<PublicationPage> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               height: 100,
-              child: const Text(
-                "Ensemble célébrons ce 19 octobre 2024 la journée mondiale de lutte contre le cancer de sein. A cet effet nous allons tous nous vêtir d’un vêtement rose.",
+              child: Text(
+                getCurrPublication.message,
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.black,
@@ -157,6 +188,8 @@ class _PublicationPageState extends State<PublicationPage> {
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -168,31 +201,128 @@ class _PublicationPageState extends State<PublicationPage> {
                   ],
                 ),
                 child: Column(
-                  children: List.generate(commentsList.length, (index) {
-                    return Column(
-                      children: [
-                        CommentCard(
-                          commentData: commentsList[index],
-                        ),
-                        if (index < commentsList.length - 1)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 30),
-                            child: Divider(
-                                color: Color.fromARGB(116, 158, 158, 158),
-                                thickness: 1),
-                          ),
-                      ],
-                    );
-                  }),
+                  children: [
+                    CommentController(publicationId: publicationId)
+                  ]
                 ),
               ),
+            ),
+            SizedBox(
+              height: 50,
+            ),
+            Container(
+              height: 65,
+              margin: const EdgeInsets.only(top: 8),
+              width: MediaQuery.of(context).size.width * 0.89,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.cancel_rounded,
+                        color: campuscolor,
+                      ),
+                      onPressed: () {
+                        _messageController.clear();
+                      },
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 9.0),
+                        child: TextField(
+                          controller: _messageController,
+                          decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.all(10),
+                            hintText: 'Enter your comment here...',
+                            hintStyle: TextStyle(fontSize: 16),
+                            border: InputBorder
+                                .none, // Remove the line below hintText
+                          ),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        User? user = FirebaseAuth.instance.currentUser;
+                        if (user != null) {
+                          FirebaseFirestore firestore =
+                              FirebaseFirestore.instance;
+                          DocumentSnapshot userSnapshot = await firestore
+                              .collection('users')
+                              .doc(user.uid)
+                              .get();
+
+                          final userPhoto = userSnapshot['photo'];
+                          double nbLike = 0;
+
+                          final commentId = const Uuid().v4();
+
+                          try {
+                            await FirebaseFirestore.instance
+                                .collection('comments')
+                                .doc(commentId)
+                                .set({
+                              'commentId': commentId,
+                              'publicationId': publicationId,
+                              'userId': user.uid,
+                              'userPhoto': userPhoto,
+                              'nbLike': nbLike,
+                              'userName': user.displayName,
+                              'message': _messageController.text,
+                              'commentDate': Timestamp.now(),
+                            });
+                            _messageController.clear();
+                            //publicationProvider.fetchPublication();
+                            await Fluttertoast.showToast(
+                              msg: "Your comment has been added",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                            );
+                          } catch (error) {
+                            GlobalMethods.errorDialog(
+                              subtitle: error.toString(),
+                              context: context,
+                            );
+                          } finally {
+                            //Navigator.pop(context);
+                          }
+                        }
+                      },
+                      icon: Transform.rotate(
+                        angle: -math.pi / 5, // Angle de rotation
+                        child: const Icon(
+                          Icons.send,
+                          size: 28,
+                          color: campuscolor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 20,
             )
           ],
         ),
       ),
       ButtonBackWidget(),
       Positioned(
-        bottom: 35,
+        bottom: 90,
         right: 20,
         child: GestureDetector(
           onTap: () {},
@@ -222,86 +352,19 @@ class _PublicationPageState extends State<PublicationPage> {
                   size: 28,
                 ),
                 Text(
-                '2.1K',
-                style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontFamily: 'CrimsonText',
-                  fontWeight: FontWeight.w400,
+                  '2.1K',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontFamily: 'CrimsonText',
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
               ],
             ),
           ),
         ),
       )
     ]));
-  }
-}
-
-class CommentCard extends StatelessWidget {
-  final Map<String, String> commentData;
-
-  CommentCard({
-    required this.commentData,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(50.0)),
-        child: Image.asset(
-          commentData['profil']!,
-          fit: BoxFit.cover,
-          width: 45,
-          height: 45,
-        ),
-      ),
-      title: Padding(
-        padding: const EdgeInsets.only(top: 10, right: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              commentData['name']!,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontFamily: 'Roboto',
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            Text(
-              commentData['heure']!,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 16,
-                fontFamily: 'CrimsonText',
-              ),
-            ),
-          ],
-        ),
-      ),
-      subtitle: Stack(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                commentData['comment']!,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                  fontFamily: 'CrimsonText',
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ],
-          ),
-          Positioned(right: 1, bottom: 1, child: LikeButton())
-        ],
-      ),
-    );
   }
 }

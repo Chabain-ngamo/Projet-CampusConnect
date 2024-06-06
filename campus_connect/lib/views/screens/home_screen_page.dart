@@ -15,38 +15,6 @@ class HomeScreenPage extends StatefulWidget {
 }
 
 class _HomeScreenPageState extends State<HomeScreenPage> {
-  final List publicationList = [
-    {
-      'name': 'Duval',
-      'message':
-          'Ensemble célébrons ce 19 octobre 2024 la journée mondiale de lutte contre le cancer de sein. A cet effet nous allons tous nous vêtir d’un vêtement rose.',
-      'picture': 'assets/theme3.png',
-      'profil': 'assets/profil.jpeg',
-      'date': '28 May 2024 at 10:02 AM',
-      'like': '230',
-      'comments': '12',
-    },
-    {
-      'name': 'Chabain',
-      'message':
-          'Ensemble célébrons ce 19 octobre 2024 la journée mondiale de lutte contre le cancer de sein. A cet effet nous allons tous nous vêtir d’un vêtement rose.',
-      'picture': 'assets/theme3.png',
-      'profil': 'assets/profil.jpeg',
-      'date': '28 May 2024 at 10:02 AM',
-      'like': '192',
-      'comments': '26',
-    },
-    {
-      'name': 'Florent',
-      'message':
-          'Ensemble célébrons ce 19 octobre 2024 la journée mondiale de lutte contre le cancer de sein. A cet effet nous allons tous nous vêtir d’un vêtement rose.',
-      'picture': 'assets/theme3.png',
-      'profil': 'assets/profil.jpeg',
-      'date': '28 May 2024 at 10:02 AM',
-      'like': '50',
-      'comments': '56',
-    },
-  ];
 
   @override
   void initState() {

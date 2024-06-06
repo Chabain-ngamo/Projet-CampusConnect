@@ -28,9 +28,15 @@ class _PublicationControllerHState extends State<PublicationControllerH> {
 
     return GestureDetector(
       onTap: () {
-        /*Navigator.of(context).push(
-          MaterialPageRoute(builder: ((context) => PublicationPage()))
-        );*/
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const PublicationPage(),
+              settings: RouteSettings(
+                arguments: publicationModel.publicationId,
+              ),
+            ),
+          );
       },
       child: Container(
         margin: const EdgeInsets.all(5),
@@ -124,6 +130,8 @@ class _PublicationControllerHState extends State<PublicationControllerH> {
                           fontFamily: 'CrimsonText',
                           fontWeight: FontWeight.w400,
                         ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
                       ),
                     ),
                   ],
