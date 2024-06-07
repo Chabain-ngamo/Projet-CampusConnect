@@ -8,3 +8,8 @@ const backColor = Color.fromARGB(25, 55, 107, 237);
 
 // ignore: constant_identifier_names
 const OPENWEATHER_API_KEY = "8f0efc4544b14d8a717df547170ab1a6";
+
+class Constants{
+
+  static String myName = "";
+}

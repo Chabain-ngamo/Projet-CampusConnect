@@ -1,79 +1,117 @@
+import 'dart:async';
 import 'dart:math' as math;
 import 'package:campus_connect/models/message.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/widgets/back_button.dart';
 import 'package:campus_connect/views/widgets/messageBubble.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 
 class ChatDetailPage extends StatefulWidget {
-  const ChatDetailPage({Key? key}) : super(key: key);
+  final String chatId;
+  const ChatDetailPage({
+    super.key,
+    required this.chatId,
+  });
 
   @override
   State<ChatDetailPage> createState() => _ChatDetailPageState();
 }
 
 class _ChatDetailPageState extends State<ChatDetailPage> {
-  List<Message> messages = [
-    Message(
-      text: 'yo ya la forme',
-      date: DateTime.now().subtract(const Duration(days: 3, minutes: 3)),
-      isSendByMe: false,
-    ),
-    Message(
-      text: 'tranquille',
-      date: DateTime.now().subtract(const Duration(days: 3, minutes: 4)),
-      isSendByMe: true,
-    ),
-    Message(
-      text: 'et toi',
-      date: DateTime.now().subtract(const Duration(days: 3, minutes: 3)),
-      isSendByMe: false,
-    ),
-    Message(
-      text: 'posé',
-      date: DateTime.now().subtract(const Duration(days: 4, minutes: 3)),
-      isSendByMe: true,
-    ),
-    Message(
-      text: 'tranquille',
-      date: DateTime.now().subtract(const Duration(days: 4, minutes: 3)),
-      isSendByMe: false,
-    ),
-    Message(
-      text: 'et toi',
-      date: DateTime.now().subtract(const Duration(days: 4, minutes: 4)),
-      isSendByMe: false,
-    ),
-    Message(
-      text: 'posé',
-      date: DateTime.now().subtract(const Duration(days: 4, minutes: 4)),
-      isSendByMe: true,
-    ),
-    Message(
-      text: 'posé',
-      date: DateTime.now().subtract(const Duration(days: 4, minutes: 3)),
-      isSendByMe: true,
-    ),
-    Message(
-      text: 'tranquille',
-      date: DateTime.now().subtract(const Duration(days: 4, minutes: 3)),
-      isSendByMe: false,
-    ),
-    Message(
-      text: 'et toi',
-      date: DateTime.now().subtract(const Duration(days: 4, minutes: 4)),
-      isSendByMe: false,
-    ),
-    Message(
-      text: 'posé',
-      date: DateTime.now().subtract(const Duration(days: 4, minutes: 4)),
-      isSendByMe: true,
-    ),
-  ].reversed.toList();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  late final StreamSubscription<QuerySnapshot<Map<String, dynamic>>> _messagesSubscription;
+  String? _currentUser;
 
+
+  List<Message> messages = [];
   TextEditingController _messageController = TextEditingController();
+
+ @override
+void initState() {
+  super.initState();
+  _currentUser = _auth.currentUser?.uid;
+  _messagesSubscription = _firestore
+    .collection('messages')
+    .doc(widget.chatId)
+    .collection('chat')
+    .orderBy('date', descending: false)
+    .snapshots()
+    .listen((snapshot) {
+      if (mounted) {
+        setState(() {
+          messages = snapshot.docs
+            .map((doc) => Message(
+                  text: doc.data()['text'],
+                  date: (doc.data()['date'] as Timestamp).toDate(),
+                  isSendByMe: doc.data()['sendByMe'] == _currentUser,
+                ))
+            .toList();
+        });
+      }
+    });
+}
+
+
+
+@override
+void dispose() {
+  _messagesSubscription.cancel();
+  super.dispose();
+}
+
+
+Future<void> _loadMessages() async {
+  if (!mounted) return; // Vérifier si le widget est encore monté
+
+  final snapshot = await _firestore
+      .collection('messages')
+      .doc(widget.chatId)
+      .collection('chat')
+      .orderBy('date', descending: true)
+      .get();
+
+  setState(() {
+    messages = snapshot.docs
+        .map((doc) => Message(
+              text: doc.data()['text'],
+              date: (doc.data()['date'] as Timestamp).toDate(),
+              isSendByMe: doc.data()['sendByMe'],
+            ))
+        .toList();
+  });
+}
+
+Future<void> _sendMessage() async {
+  final text = _messageController.text;
+  if (text.isNotEmpty) {
+    final message = Message(
+      text: text,
+      date: DateTime.now(),
+      isSendByMe: true,
+    );
+
+    await _firestore
+      .collection('messages')
+      .doc(widget.chatId)
+      .collection('chat')
+      .add({
+        'text': message.text,
+        'date': message.date,
+        'sendByMe': _currentUser,
+      });
+
+    _messageController.clear();
+  }
+}
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -236,7 +274,8 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                         ),
                       ),
                       IconButton(
-                        onPressed: () async {
+                        onPressed:  _sendMessage,
+                        /*() async {
                           final text = _messageController.text;
 
                           if (text.isNotEmpty) {
@@ -251,7 +290,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                               _messageController.clear();
                             });
                           }
-                        },
+                        },*/
                         icon: Transform.rotate(
                           angle: -math.pi / 5, // Angle de rotation
                           child: const Icon(

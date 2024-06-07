@@ -1,6 +1,7 @@
 import 'package:campus_connect/firebase_options.dart';
 import 'package:campus_connect/l10n/l10n.dart';
 import 'package:campus_connect/main_navigationbar.dart';
+import 'package:campus_connect/models/userModel.dart';
 import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/providers/language_provider.dart';
 import 'package:campus_connect/providers/like_provider.dart';
@@ -37,6 +38,7 @@ class _MyAppState extends State<MyApp> {
   UsersProvider usersProvider = UsersProvider();
   DarkThemeProvider themeState = DarkThemeProvider();
   LanguageProvider languageProvider = LanguageProvider();
+  
 
   @override
   Widget build(BuildContext context) {

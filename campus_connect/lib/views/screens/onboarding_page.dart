@@ -65,7 +65,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     ),
                     OnboardingWidget2(
                       imagePath: 'assets/theme4.png',
-                      imagePath2: 'assets/theme3.png',
+                      imagePath2: 'assets/theme5.png',
                       imagePath3: 'assets/onboarding1.png',
                       imagePath4: 'assets/theme2.png',
                       title: "Read the publication you want instantly",
