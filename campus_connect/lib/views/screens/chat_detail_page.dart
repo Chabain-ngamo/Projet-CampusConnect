@@ -5,9 +5,12 @@ import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/widgets/back_button.dart';
 import 'package:campus_connect/views/widgets/messageBubble.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:grouped_list/grouped_list.dart';
@@ -37,10 +40,42 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
 
   List<Message> messages = [];
   TextEditingController _messageController = TextEditingController();
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  File? _image;
 
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+      // Send the image
+      await _sendMessageWithImage(_image!);
+    }
+  }
 
- @override
+  Future<void> _sendMessageWithImage(File image) async {
+    try {
+      final imageName = DateTime.now().millisecondsSinceEpoch.toString();
+      final ref = _storage.ref().child('chat_images').child(imageName);
+
+      final uploadTask = ref.putFile(image);
+      final snapshot = await uploadTask.whenComplete(() => null);
+      final imageUrl = await snapshot.ref.getDownloadURL();
+
+      await _firestore.collection('messages').doc(widget.chatId).collection('chat').add({
+        'imageUrl': imageUrl,
+        'date': DateTime.now(),
+        'sendByMe': _currentUser, // Remplacez par votre logique utilisateur
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+ /*@override
 void initState() {
   super.initState();
   _currentUser = _auth.currentUser?.uid;
@@ -63,6 +98,30 @@ void initState() {
         });
       }
     });
+}*/
+@override
+@override
+void initState() {
+  super.initState();
+  _currentUser = _auth.currentUser?.uid;
+  _messagesSubscription = _firestore
+      .collection('messages')
+      .doc(widget.chatId)
+      .collection('chat')
+      .orderBy('date', descending: false)
+      .snapshots()
+      .listen((snapshot) {
+    if (mounted) {
+      setState(() {
+        messages = snapshot.docs.map((doc) {
+          print("Document data: ${doc.data()}"); // Debug: Afficher les données du document
+          return Message.fromDocument(doc, _currentUser!);
+        }).toList();
+      });
+    }
+  }, onError: (error) {
+    print("Error getting messages: $error"); // Debug: Afficher les erreurs
+  });
 }
 
 
@@ -272,7 +331,7 @@ Future<void> _sendMessage() async {
                           Icons.photo_camera_rounded,
                           color: campuscolor,
                         ),
-                        onPressed: () {},
+                        onPressed: _pickImage,
                       ),
                       Expanded(
                         child: Padding(
@@ -291,22 +350,6 @@ Future<void> _sendMessage() async {
                       ),
                       IconButton(
                         onPressed:  _sendMessage,
-                        /*() async {
-                          final text = _messageController.text;
-
-                          if (text.isNotEmpty) {
-                            final message = Message(
-                              text: text,
-                              date: DateTime.now(),
-                              isSendByMe: true,
-                            );
-
-                            setState(() {
-                              messages.add(message);
-                              _messageController.clear();
-                            });
-                          }
-                        },*/
                         icon: Transform.rotate(
                           angle: -math.pi / 5, // Angle de rotation
                           child: const Icon(
