@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/screens/publication_page.dart';
 //import 'package:google_fonts/google_fonts.dart';
@@ -81,7 +82,15 @@ class _HomeScreenPageState extends State<HomeScreenPage> {
                     size: 35,
                     color: campuscolor,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    AwesomeNotifications().createNotification(
+                      content: NotificationContent(
+                        id: 1,
+                        channelKey: "campus_connect",
+                        title: "Hello",
+                        body: "Notification done"
+                      ));
+                  },
                 ),
               ],
             ),

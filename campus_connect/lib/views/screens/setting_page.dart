@@ -15,7 +15,6 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  bool isEnglishSelected = true;
   late Size mediaSize;
 
   @override
@@ -79,87 +78,80 @@ class _SettingPageState extends State<SettingPage> {
         const SizedBox(height: 20),
         _buildDarkModeCard(context, notifier),
         const SizedBox(height: 20),
-        _buildLanguageCard(),
+        _buildLanguageCard(context, notifier),
       ],
     );
   }
 
-  Widget _buildLanguageCard() {
-  
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          isEnglishSelected = !isEnglishSelected;
-        });},
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        elevation: 4,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                AppLocalizations.of(context)!.language,
-                style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Roboto'
+  Widget _buildLanguageCard(BuildContext context, UiProvider notifier) {
+  return GestureDetector(
+    onTap: () {
+      // Rien à faire ici, car le changement de langue se fait via les checkboxes
+    },
+    child: Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              AppLocalizations.of(context)!.language,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Roboto',
+              ),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.english,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.english,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
+                Checkbox(
+                  value: notifier.isEnglishSelected,
+                  onChanged: (value) {
+                    notifier.changeLanguage(true);
+                    setState(() {});
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.french,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
                   ),
-                  Checkbox(
-                    value: isEnglishSelected,
-                    onChanged: (value) {
-                      setState(() {
-                        isEnglishSelected = value ?? false;
-                        Locale("en");
-                      });
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.french,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Checkbox(
-                    value: !isEnglishSelected,
-                    onChanged: (value) {
-                      setState(() {
-                        isEnglishSelected = !(value ?? false);
-                        Locale("fr");
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
+                ),
+                Checkbox(
+                  value: !notifier.isEnglishSelected,
+                  onChanged: (value) {
+                    notifier.changeLanguage(false);
+                    setState(() {});
+                  },
+                ),
+              ],
+            ),
+          ],
         ),
       ),
-    );
-  }
-
+    ),
+  );
+}
 
   Widget _buildDarkModeCard(BuildContext context, UiProvider notifier) {
     
@@ -194,10 +186,10 @@ class _SettingPageState extends State<SettingPage> {
                   notifier.isDark ? 'assets/dark.png' : 'assets/iconssun.png',
                   width: 50,
                   height: 50,
-                  color: notifier.isDark ? greyColor : campuscolor,
+                  color: notifier.isDark ? backColor : campuscolor,
                 ),
                 Text(
-                  notifier.isDark ? AppLocalizations.of(context)!.mode : AppLocalizations.of(context)!.mode,
+                  notifier.isDark ? AppLocalizations.of(context)!.mode2 : AppLocalizations.of(context)!.mode,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
