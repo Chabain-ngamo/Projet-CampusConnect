@@ -1,6 +1,8 @@
 import 'package:campus_connect/firebase_options.dart';
+import 'package:campus_connect/l10n/l10n.dart';
 import 'package:campus_connect/main_navigationbar.dart';
 import 'package:campus_connect/providers/dark_theme_provider.dart';
+import 'package:campus_connect/providers/language_provider.dart';
 import 'package:campus_connect/providers/like_provider.dart';
 import 'package:campus_connect/providers/publication_provider.dart';
 import 'package:campus_connect/providers/user_provider.dart';
@@ -13,6 +15,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +36,7 @@ class _MyAppState extends State<MyApp> {
   LikeProvider likeProvider = LikeProvider();
   UsersProvider usersProvider = UsersProvider();
   DarkThemeProvider themeState = DarkThemeProvider();
+  LanguageProvider languageProvider = LanguageProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +50,21 @@ class _MyAppState extends State<MyApp> {
             value: usersProvider),
         ChangeNotifierProvider<DarkThemeProvider>.value(
             value: themeState),
+        ChangeNotifierProvider<LanguageProvider>.value(
+            value: languageProvider),
       ],
-      child: Consumer<PublicationProvider>(
+      child: Consumer<LanguageProvider>(
         builder: (context, provider, _) {
           return MaterialApp(
             title: 'Campus Connect',
+            locale: languageProvider.locale,
+            supportedLocales: L10n.all,
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
             routes: {
               '/': (context) => SplashScreen(
                     child: FutureBuilder<SharedPreferences>(
@@ -70,10 +84,6 @@ class _MyAppState extends State<MyApp> {
                     ),
                   ),
             },
-            locale: const Locale("en"),
-            
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
             onGenerateRoute: (settings) {
               if (settings.name == '/publicationPage') {
                 return MaterialPageRoute(

@@ -1,4 +1,5 @@
 import 'package:campus_connect/providers/dark_theme_provider.dart';
+import 'package:campus_connect/providers/language_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/widgets/back_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -13,8 +14,18 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  bool isEnglishSelected = true;
   late Size mediaSize;
+
+  late bool isEnglishSelected;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final locale = Provider.of<LanguageProvider>(context).locale;
+    setState(() {
+      isEnglishSelected = locale.languageCode == 'en';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +57,10 @@ class _SettingPageState extends State<SettingPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                             Text(
+                            Text(
                               AppLocalizations.of(context)!.settings,
                               style: TextStyle(
-                                color: color,
+                                  color: color,
                                   //color: darkColor,
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
@@ -61,11 +72,10 @@ class _SettingPageState extends State<SettingPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16.0),
                                 side: BorderSide(
-                                  color: campuscolor, 
-                                  width: 2.0,        
+                                  color: campuscolor,
+                                  width: 2.0,
                                 ),
                               ),
-                              
                               elevation: 4,
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
@@ -78,7 +88,7 @@ class _SettingPageState extends State<SettingPage> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          "Theme",
+                                          AppLocalizations.of(context)!.theme,
                                           style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold,
@@ -125,6 +135,13 @@ class _SettingPageState extends State<SettingPage> {
                               onTap: () {
                                 setState(() {
                                   isEnglishSelected = !isEnglishSelected;
+                                  Provider.of<LanguageProvider>(context,
+                                          listen: false)
+                                      .setLocale(
+                                    isEnglishSelected
+                                        ? const Locale('en')
+                                        : const Locale('fr'),
+                                  );
                                 });
                               },
                               child: Card(
@@ -132,9 +149,9 @@ class _SettingPageState extends State<SettingPage> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16.0),
                                   side: BorderSide(
-                                  color: campuscolor, 
-                                  width: 2.0,        
-                                ),
+                                    color: campuscolor,
+                                    width: 2.0,
+                                  ),
                                 ),
                                 elevation: 4,
                                 child: Padding(
@@ -143,21 +160,22 @@ class _SettingPageState extends State<SettingPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                       Text(
-                                        "Language",
+                                      Text(
+                                        AppLocalizations.of(context)!.language,
                                         style: TextStyle(
-                                            fontSize: 20,
-                                            color: color,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Roboto'),
+                                          fontSize: 20,
+                                          color: color,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Roboto',
+                                        ),
                                       ),
                                       const SizedBox(height: 24),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                           Text(
-                                            "English",
+                                          Text(
+                                            AppLocalizations.of(context)!.english,
                                             style: TextStyle(
                                               fontSize: 16,
                                               color: color,
@@ -170,6 +188,14 @@ class _SettingPageState extends State<SettingPage> {
                                               setState(() {
                                                 isEnglishSelected =
                                                     value ?? false;
+                                                Provider.of<LanguageProvider>(
+                                                        context,
+                                                        listen: false)
+                                                    .setLocale(
+                                                  isEnglishSelected
+                                                      ? const Locale('en')
+                                                      : const Locale('fr'),
+                                                );
                                               });
                                             },
                                           ),
@@ -180,8 +206,8 @@ class _SettingPageState extends State<SettingPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                           Text(
-                                            "Français",
+                                          Text(
+                                            AppLocalizations.of(context)!.french,
                                             style: TextStyle(
                                               fontSize: 16,
                                               color: color,
@@ -194,6 +220,14 @@ class _SettingPageState extends State<SettingPage> {
                                               setState(() {
                                                 isEnglishSelected =
                                                     !(value ?? false);
+                                                Provider.of<LanguageProvider>(
+                                                        context,
+                                                        listen: false)
+                                                    .setLocale(
+                                                  isEnglishSelected
+                                                      ? const Locale('en')
+                                                      : const Locale('fr'),
+                                                );
                                               });
                                             },
                                           ),
