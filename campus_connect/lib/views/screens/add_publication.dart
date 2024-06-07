@@ -2,6 +2,7 @@ import 'package:campus_connect/models/pulicationModel.dart';
 import 'package:campus_connect/providers/publication_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/services/global_methods.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -75,7 +76,7 @@ class _AddPublicationState extends State<AddPublication> {
           height: 10,
         ),
         Text(
-          'Add your publication',
+          AppLocalizations.of(context)!.addpubli,
           style: TextStyle(
             fontSize: 22,
             fontFamily: 'Roboto',
@@ -258,8 +259,8 @@ class _AddPublicationState extends State<AddPublication> {
     shadowColor: campuscolor,
     minimumSize: const Size.fromHeight(60),
   ),
-  child: const Text(
-    "POST",
+  child:  Text(
+    AppLocalizations.of(context)!.post,
     style: TextStyle(
         color: Colors.white,
         fontFamily: 'Roboto',

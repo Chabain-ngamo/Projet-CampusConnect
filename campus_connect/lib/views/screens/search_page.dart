@@ -1,5 +1,6 @@
 import 'package:campus_connect/controllers/profilSearchController.dart';
 import 'package:campus_connect/models/userModel.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/providers/user_provider.dart';
 import 'package:campus_connect/services/constant.dart';
@@ -77,8 +78,8 @@ class _SearchPageState extends State<SearchPage> {
                             listUsersSearch = usersProvider.searchQuery(valuee);
                           });
                         },
-                        decoration: const InputDecoration(
-                          hintText: 'What profile are you looking for?',
+                        decoration:  InputDecoration(
+                          hintText: AppLocalizations.of(context)!.searhM,
                           hintStyle: TextStyle(
                               fontSize: 18,
                               fontFamily: 'CrimsonText',

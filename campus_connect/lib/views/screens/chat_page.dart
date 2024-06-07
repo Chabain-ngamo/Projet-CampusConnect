@@ -1,8 +1,11 @@
+import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/screens/chat_detail_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 class ChatPage extends StatefulWidget {
@@ -15,11 +18,17 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  
   @override
   Widget build(BuildContext context) {
+    final themeState = Provider.of<DarkThemeProvider>(context);
+    final Color color = themeState.getDarkTheme ? Colors.white : Colors.black;
+    final Color colorB =
+        themeState.getDarkTheme ? Color(0xFF1A1B20) : Colors.white;
+
     final currentUser = _auth.currentUser;
     return Scaffold(
+      backgroundColor: colorB,
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -29,11 +38,11 @@ class _ChatPageState extends State<ChatPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
-                    children: const [
+                    children:  [
                       Text(
-                        "Chat",
+                        AppLocalizations.of(context)!.chat,
                         style: TextStyle(
-                          color: Colors.black,
+                          color: color,
                           fontSize: 26,
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w800,
@@ -46,8 +55,8 @@ class _ChatPageState extends State<ChatPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
+                    decoration: BoxDecoration(
+                      color: colorB,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(30),
                         topRight: Radius.circular(30),
@@ -125,6 +134,10 @@ class InterlocuteurCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeState = Provider.of<DarkThemeProvider>(context);
+    final Color color = themeState.getDarkTheme ? Colors.white : Colors.black;
+    final Color colorB =
+        themeState.getDarkTheme ? Color(0xFF1A1B20) : Colors.white;
     return GestureDetector(
       onTap: () {
         final currentUserId = FirebaseAuth.instance.currentUser!.uid;
@@ -135,7 +148,7 @@ class InterlocuteurCard extends StatelessWidget {
 
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: ((context) => ChatDetailPage(chatId: chatId)),
+            builder: ((context) => ChatDetailPage(chatId: chatId, otherUserName: InterlocuteurData['name'], otherUserPhotoUrl: InterlocuteurData['photo'])),
           ),
         );
 
@@ -164,8 +177,8 @@ class InterlocuteurCard extends StatelessWidget {
             children: [
               Text(
                 InterlocuteurData['name'],
-                style: const TextStyle(
-                  color: Colors.black,
+                style:  TextStyle(
+                  color: color,
                   fontSize: 18,
                   fontFamily: 'Roboto',
                   fontWeight: FontWeight.w800,
@@ -181,9 +194,9 @@ class InterlocuteurCard extends StatelessWidget {
               children: [
                 Text(
                   InterlocuteurData['promo'],
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 16,
-                    color: Colors.black,
+                    color: color,
                     fontFamily: 'CrimsonText',
                     fontWeight: FontWeight.w400,
                   ),

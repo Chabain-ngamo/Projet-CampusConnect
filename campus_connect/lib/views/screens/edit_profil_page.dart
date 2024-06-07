@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/services/global_methods.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:campus_connect/views/widgets/back_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -135,7 +136,7 @@ class _EditProfilPageState extends State<EditProfilPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                                Text(
-                                "Update Profile",
+                                AppLocalizations.of(context)!.updatePro,
                                 style: TextStyle(
                                     color: color,
                                     fontSize: 24,
@@ -227,14 +228,14 @@ class _EditProfilPageState extends State<EditProfilPage> {
                                 ],
                               )),
                               const SizedBox(height: 60),
-                              _buildGreyText("Name"),
+                              _buildGreyText(AppLocalizations.of(context)!.name),
                               TextField(
                                 controller: _userController,
                                 decoration: const InputDecoration(
                                     iconColor: campuscolor),
                               ),
                               const SizedBox(height: 25),
-                              _buildGreyText("Promotion"),
+                              _buildGreyText(AppLocalizations.of(context)!.promotion),
                               TextField(
                                 controller: _promotionController,
                                 decoration: const InputDecoration(
@@ -311,8 +312,8 @@ class _EditProfilPageState extends State<EditProfilPage> {
                         shadowColor: campuscolor,
                         minimumSize: const Size.fromHeight(60),
                       ),
-                      child: const Text(
-                        "UPDATE",
+                      child:  Text(
+                        AppLocalizations.of(context)!.updateBut,
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,

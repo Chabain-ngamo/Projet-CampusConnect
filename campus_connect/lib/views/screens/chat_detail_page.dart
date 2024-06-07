@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:campus_connect/models/message.dart';
+import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/widgets/back_button.dart';
 import 'package:campus_connect/views/widgets/messageBubble.dart';
@@ -8,14 +9,19 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 
 class ChatDetailPage extends StatefulWidget {
   final String chatId;
+  final String otherUserName;
+  final String otherUserPhotoUrl;
   const ChatDetailPage({
     super.key,
     required this.chatId,
+    required this.otherUserName,
+    required this.otherUserPhotoUrl,
   });
 
   @override
@@ -31,6 +37,8 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
 
   List<Message> messages = [];
   TextEditingController _messageController = TextEditingController();
+
+
 
  @override
 void initState() {
@@ -115,8 +123,13 @@ Future<void> _sendMessage() async {
 
   @override
   Widget build(BuildContext context) {
+    final themeState = Provider.of<DarkThemeProvider>(context);
+    final Color color = themeState.getDarkTheme ? Colors.white : Colors.black;
+    final Color colorB =
+        themeState.getDarkTheme ? Color(0xFF1A1B20) : Colors.white;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: colorB,
       body: Stack(
         children: [
           Column(
@@ -129,7 +142,7 @@ Future<void> _sendMessage() async {
                       height: 75,
                       width: MediaQuery.of(context).size.width * 0.70,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: colorB,
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
@@ -146,11 +159,14 @@ Future<void> _sendMessage() async {
                           children: [
                             ClipRRect(
                               borderRadius: BorderRadius.circular(15),
-                              child: Image.asset(
-                                'assets/profil.jpeg',
-                                height: 60,
-                                width: 60,
+                              child: 
+                              Image(
+                                image: CachedNetworkImageProvider(
+                                  widget.otherUserPhotoUrl,
+                                ),
                                 fit: BoxFit.cover,
+                                width: 60,
+                                height: 60,
                               ),
                             ),
                             Padding(
@@ -158,10 +174,10 @@ Future<void> _sendMessage() async {
                                   horizontal: 10, vertical: 10),
                               child: Column(
                                 children: [
-                                  const Text(
-                                    'Chabain',
+                                   Text(
+                                    widget.otherUserName,
                                     style: TextStyle(
-                                      color: Colors.black,
+                                      color: color,
                                       fontSize: 20,
                                       fontFamily: 'Roboto',
                                       fontWeight: FontWeight.w800,

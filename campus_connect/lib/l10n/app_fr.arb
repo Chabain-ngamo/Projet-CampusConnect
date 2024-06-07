@@ -1,6 +1,8 @@
 {
     "settings": "Paramètres",
     "theme": "Thème",
+    "addpubli": "Ajoute ta Publication",
+    "searhM": "Quel profil recherchez-vous ?",
     "language": "Langue",
     "mode": "Mode jour",
     "english": "Anglais",
@@ -42,5 +44,6 @@
     "updatePro": "Mettre à jour le profil",
     "promotion": "Promotion",
     "name": "Nom",
-    "updateBut": "METTRE À JOUR"
+    "updateBut": "METTRE À JOUR",
+    "explore": "Explorez aujourd'hui"
 }

@@ -4,6 +4,7 @@ import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/screens/auth_page.dart';
 import 'package:campus_connect/views/screens/edit_profil_page.dart';
 import 'package:campus_connect/views/screens/meteo_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:campus_connect/views/screens/notification_page.dart';
 import 'package:campus_connect/views/screens/setting_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -95,7 +96,7 @@ class _ProfilPageState extends State<ProfilPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                                Text(
-                                "Profile",
+                                AppLocalizations.of(context)!.profile,
                                 style: TextStyle(
                                   color: color,
                                   fontSize: 24,
@@ -142,7 +143,7 @@ class _ProfilPageState extends State<ProfilPage> {
                                                 width: 10,
                                               ),
                                                Text(
-                                                'Settings',
+                                                AppLocalizations.of(context)!.settings,
                                                 style: TextStyle(
                                                   color: color,
                                                   fontSize: 16,
@@ -182,7 +183,7 @@ class _ProfilPageState extends State<ProfilPage> {
                                                 width: 10,
                                               ),
                                                Text(
-                                                'Notifications',
+                                                AppLocalizations.of(context)!.notification,
                                                 style: TextStyle(
                                                   color: color,
                                                   fontSize: 16,
@@ -222,7 +223,7 @@ class _ProfilPageState extends State<ProfilPage> {
                                                 width: 10,
                                               ),
                                                Text(
-                                                'Meteo',
+                                                AppLocalizations.of(context)!.meteo,
                                                 style: TextStyle(
                                                   color: color,
                                                   fontSize: 16,
@@ -262,7 +263,7 @@ class _ProfilPageState extends State<ProfilPage> {
                                                 width: 10,
                                               ),
                                                Text(
-                                                'Edit',
+                                                AppLocalizations.of(context)!.edit,
                                                 style: TextStyle(
                                                   color: color,
                                                   fontSize: 16,
@@ -423,7 +424,7 @@ class _ProfilPageState extends State<ProfilPage> {
                                         child: Row(
                                           children:  [
                                             Text(
-                                              'About me',
+                                              AppLocalizations.of(context)!.about_me,
                                               style: TextStyle(
                                                 fontSize: 18,
                                                 color: color,
@@ -440,8 +441,8 @@ class _ProfilPageState extends State<ProfilPage> {
                                         ),
                                         child: Row(
                                           children: [
-                                            const Text(
-                                              'promotion ',
+                                             Text(
+                                              AppLocalizations.of(context)!.promotion ,
                                               style: TextStyle(
                                                 fontSize: 20,
                                                 color: campuscolor,
@@ -802,7 +803,7 @@ class _ProfilPageState extends State<ProfilPage> {
                         child: Row(
                           children:  [
                             Text(
-                              "My Publications",
+                              AppLocalizations.of(context)!.myPub,
                               style: TextStyle(
                                 color: color,
                                 fontSize: 24,

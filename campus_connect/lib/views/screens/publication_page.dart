@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
@@ -158,7 +159,7 @@ class _PublicationPageState extends State<PublicationPage> {
               child: Row(
                 children:  [
                   Text(
-                    "Comments",
+                    AppLocalizations.of(context)!.comment,
                     style: TextStyle(
                       color: color,
                       fontSize: 22,

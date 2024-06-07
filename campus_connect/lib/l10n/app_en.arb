@@ -7,6 +7,14 @@
     "@theme": {
       "description": "Theme title"
     },
+    "searhM": "searhM",
+    "@searhM": {
+      "description": "What profile are you looking for?"
+    },
+    "addpubli": "addpubli",
+    "@addpubli": {
+      "description": "Add your publication"
+    },
     "language": "Language",
     "@language": {
       "description": "Language title"
@@ -174,5 +182,9 @@
     "updateBut": "UPDATE",
     "@updateBut": {
       "description": "updateBut title"
+    },
+    "explore": "explore",
+    "@explore": {
+      "description": "Explore today's"
     }
   }

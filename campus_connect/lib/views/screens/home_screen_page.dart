@@ -4,6 +4,7 @@ import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/providers/publication_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/screens/publication_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 //import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +85,8 @@ class _HomeScreenPageState extends State<HomeScreenPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children:  [
                 Text(
-                  "Explore today's",
+                  //AppLocalizations.of(context)!.settings
+                  AppLocalizations.of(context)!.explore,
                   style: TextStyle(
                       color: color,
                       fontSize: 24,
