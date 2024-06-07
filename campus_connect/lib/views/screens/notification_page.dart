@@ -1,5 +1,8 @@
+import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:campus_connect/views/widgets/back_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 class NotificationPage extends StatefulWidget {
@@ -12,6 +15,11 @@ class NotificationPage extends StatefulWidget {
 class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
+    final themeState = Provider.of<DarkThemeProvider>(context);
+    final Color color = themeState.getDarkTheme ? Colors.white : Colors.black;
+    final Color colorB =
+        themeState.getDarkTheme ? Color(0xFF1A1B20) : Colors.white;
+
     final List<Map<String, String>> notificationList = [
       {
         'notif': 'the x4 tutor will be absent today',
@@ -36,6 +44,7 @@ class _NotificationPageState extends State<NotificationPage> {
     ];
 
     return Scaffold(
+      backgroundColor: colorB,
         body: Stack(children: [
       SingleChildScrollView(
         child: Column(
@@ -46,11 +55,11 @@ class _NotificationPageState extends State<NotificationPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Row(
-                children: const [
+                children:  [
                   Text(
-                    "Notififcations",
+                     AppLocalizations.of(context)!.notification,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: color,
                       fontSize: 26,
                       fontFamily: 'Roboto',
                       fontWeight: FontWeight.w800,
@@ -65,8 +74,8 @@ class _NotificationPageState extends State<NotificationPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
+                decoration:  BoxDecoration(
+                  color: colorB,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
@@ -119,6 +128,11 @@ class NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeState = Provider.of<DarkThemeProvider>(context);
+    final Color color = themeState.getDarkTheme ? Colors.white : Colors.black;
+    final Color colorB =
+        themeState.getDarkTheme ? Color(0xFF1A1B20) : Colors.white;
+
     return ListTile(
       leading: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(15.0)),
@@ -138,8 +152,8 @@ class NotificationCard extends StatelessWidget {
           children: [
             Text(
               NotificationData['notif']!,
-              style: const TextStyle(
-                color: Colors.black,
+              style:  TextStyle(
+                color: color,
                 fontSize: 18,
                 fontFamily: 'Roboto',
                 fontWeight: FontWeight.w800,
@@ -155,6 +169,7 @@ class NotificationCard extends StatelessWidget {
             Icon(
               Icons.access_time_filled_sharp,
               size: 18,
+              color: color,
             ),
             SizedBox(
               width: 10,

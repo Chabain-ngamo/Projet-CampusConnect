@@ -3,6 +3,7 @@ import 'package:campus_connect/models/pulicationModel.dart';
 import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/providers/publication_provider.dart';
 import 'package:campus_connect/services/constant.dart';
+import 'package:campus_connect/views/screens/notification_page.dart';
 import 'package:campus_connect/views/screens/publication_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -105,7 +106,10 @@ class _HomeScreenPageState extends State<HomeScreenPage> {
                         size: 35,
                         color: campuscolor,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: ((context) => const NotificationPage())));
+                      },
                     ),
                   ],
                 ),
