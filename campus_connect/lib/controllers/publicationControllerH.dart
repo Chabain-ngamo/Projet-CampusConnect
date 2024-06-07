@@ -4,7 +4,6 @@ import 'package:campus_connect/providers/publication_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:campus_connect/views/screens/publication_page.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';

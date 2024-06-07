@@ -2,6 +2,8 @@ import 'package:campus_connect/models/userModel.dart';
 import 'package:campus_connect/providers/dark_theme_provider.dart';
 import 'package:campus_connect/services/constant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:campus_connect/views/screens/chat_detail_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -72,7 +74,42 @@ class _ProfilSearchControllerState extends State<ProfilSearchController> {
                               children: [
                                 Row(
                                   children: [
-                                    Text(
+                                    StreamBuilder<
+                                        QuerySnapshot<Map<String, dynamic>>>(
+                                      stream: FirebaseFirestore.instance
+                                          .collection('publications')
+                                          .where('userId',
+                                              isEqualTo: userModel.userId)
+                                          .snapshots(),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          final publicationCount =
+                                              snapshot.data?.docs.length ?? 0;
+                                          return Text(
+                                            "$publicationCount",
+                                            style: TextStyle(
+                                              fontSize: 24,
+                                              color: color,
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                          );
+                                        } else if (snapshot.hasError) {
+                                          return Text(
+                                            'Error',
+                                            style: const TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.white,
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                          );
+                                        } else {
+                                          return const CircularProgressIndicator();
+                                        }
+                                      },
+                                    ),
+                                    /*Text(
                                       '10',
                                       style:  TextStyle(
                                         color: color,
@@ -80,7 +117,7 @@ class _ProfilSearchControllerState extends State<ProfilSearchController> {
                                         fontFamily: 'Roboto',
                                         fontWeight: FontWeight.w800,
                                       ),
-                                    ),
+                                    ),*/
                                   ],
                                 ),
                                 Row(
@@ -101,7 +138,47 @@ class _ProfilSearchControllerState extends State<ProfilSearchController> {
                               children: [
                                 Row(
                                   children: [
-                                    Text(
+                                    StreamBuilder<
+                                        QuerySnapshot<Map<String, dynamic>>>(
+                                      stream: FirebaseFirestore.instance
+                                          .collection('publications')
+                                          .where('userId',
+                                              isEqualTo: userModel.userId)
+                                          .snapshots(),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          num totalLikes = 0;
+                                          for (final doc
+                                              in snapshot.data!.docs) {
+                                            final data = doc.data();
+                                            final nbLike = data['nbLike'] ?? 0;
+                                            totalLikes += nbLike.toInt();
+                                          }
+                                          return Text(
+                                            "$totalLikes",
+                                            style: TextStyle(
+                                              color: color,
+                                              fontSize: 24,
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                          );
+                                        } else if (snapshot.hasError) {
+                                          return Text(
+                                            'Error: ${snapshot.error}',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 24,
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                          );
+                                        } else {
+                                          return const CircularProgressIndicator();
+                                        }
+                                      },
+                                    ),
+                                    /*Text(
                                       '20',
                                       style:  TextStyle(
                                         color: color,
@@ -109,7 +186,7 @@ class _ProfilSearchControllerState extends State<ProfilSearchController> {
                                         fontFamily: 'Roboto',
                                         fontWeight: FontWeight.w800,
                                       ),
-                                    ),
+                                    ),*/
                                   ],
                                 ),
                                 Row(
@@ -130,7 +207,42 @@ class _ProfilSearchControllerState extends State<ProfilSearchController> {
                               children: [
                                 Row(
                                   children: [
-                                    Text(
+                                    StreamBuilder<
+                                        QuerySnapshot<Map<String, dynamic>>>(
+                                      stream: FirebaseFirestore.instance
+                                          .collection('comments')
+                                          .where('userId',
+                                              isEqualTo: userModel.userId)
+                                          .snapshots(),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          final commentCount =
+                                              snapshot.data?.docs.length ?? 0;
+                                          return Text(
+                                            "$commentCount",
+                                            style: TextStyle(
+                                              fontSize: 24,
+                                              color: color,
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                          );
+                                        } else if (snapshot.hasError) {
+                                          return Text(
+                                            'Error',
+                                            style: const TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.white,
+                                              fontFamily: 'Roboto',
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                          );
+                                        } else {
+                                          return const CircularProgressIndicator();
+                                        }
+                                      },
+                                    ),
+                                    /*Text(
                                       '15',
                                       style:  TextStyle(
                                         color: color,
@@ -138,7 +250,7 @@ class _ProfilSearchControllerState extends State<ProfilSearchController> {
                                         fontFamily: 'Roboto',
                                         fontWeight: FontWeight.w800,
                                       ),
-                                    ),
+                                    ),*/
                                   ],
                                 ),
                                 Row(
@@ -166,9 +278,33 @@ class _ProfilSearchControllerState extends State<ProfilSearchController> {
                                 width: 200,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    /*Navigator.of(context).push(
-                                      MaterialPageRoute(builder: ((context) => ChatDetailPage()))
-                                    );*/
+                                    final currentUserId =
+                                        FirebaseAuth.instance.currentUser!.uid;
+                                    final otherUserId = userModel.userId;
+                                    final chatId =
+                                        currentUserId.compareTo(otherUserId) < 0
+                                            ? '$currentUserId\_$otherUserId'
+                                            : '$otherUserId\_$currentUserId';
+
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: ((context) => ChatDetailPage(
+                                            chatId: chatId,
+                                            otherUserName:
+                                                userModel.userName,
+                                            otherUserPhotoUrl:
+                                                userModel.userPhoto)),
+                                      ),
+                                    );
+
+                                    // Ajouter le document dans la collection "messages"
+                                    FirebaseFirestore.instance
+                                        .collection('messages')
+                                        .doc(chatId)
+                                        .set({
+                                      'users': [currentUserId, otherUserId],
+                                      'createdAt': FieldValue.serverTimestamp(),
+                                    });
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: campuscolor,
@@ -201,7 +337,7 @@ class _ProfilSearchControllerState extends State<ProfilSearchController> {
                 children: [
                   Text(
                     userModel.userName,
-                    style:  TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       color: color,
                       fontFamily: 'Roboto',
@@ -219,7 +355,7 @@ class _ProfilSearchControllerState extends State<ProfilSearchController> {
                 children: [
                   Text(
                     'promotion ',
-                    style:  TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       color: color,
                       fontFamily: 'CrimsonText',
@@ -227,7 +363,7 @@ class _ProfilSearchControllerState extends State<ProfilSearchController> {
                   ),
                   Text(
                     userModel.userPromo,
-                    style:  TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       color: color,
                       fontFamily: 'CrimsonText',
